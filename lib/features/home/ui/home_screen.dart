@@ -31,7 +31,7 @@ class _ThemeLinkIcon extends ConsumerWidget {
 
     return IconButton(
       icon: Icon(icon),
-      onPressed: () => context.push(ThemeScreen.routeName),
+      onPressed: () => context.push(ThemeModeScreen.routeName),
     );
   }
 

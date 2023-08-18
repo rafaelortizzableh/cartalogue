@@ -39,11 +39,11 @@ class RouterNotifier extends ChangeNotifier {
       ),
     ),
     GoRoute(
-      path: ThemeScreen.routeName,
-      name: ThemeScreen.routeName,
+      path: ThemeModeScreen.routeName,
+      name: ThemeModeScreen.routeName,
       pageBuilder: (context, state) => const MaterialPage(
         fullscreenDialog: true,
-        child: ThemeScreen(),
+        child: ThemeModeScreen(),
       ),
       // pageBuilder: (context, state) => _modalBottomSheetRoute(
       //   const ThemeScreen(),
