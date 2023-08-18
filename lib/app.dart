@@ -13,6 +13,7 @@ class CartalogueApp extends ConsumerWidget {
     final theme = ref.watch(themeControllerProvider);
     return MaterialApp.router(
       title: 'Cartalogue',
+      debugShowCheckedModeBanner: false,
       theme: CustomTheme.lightTheme(),
       darkTheme: CustomTheme.darkTheme(),
       themeMode: theme,
