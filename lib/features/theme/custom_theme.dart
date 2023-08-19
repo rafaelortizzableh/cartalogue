@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 abstract class CustomTheme {
   static const primaryColor = Colors.deepPurple;
+  static const errorRed = Colors.red;
 
   static ThemeData darkTheme() {
     return ThemeData(

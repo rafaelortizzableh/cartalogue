@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
         title: const Text('Cartalogue'),
         actions: const [_ThemeLinkIcon()],
       ),
-      body: const Placeholder(),
+      body: const CarManufacturersList(),
     );
   }
 }

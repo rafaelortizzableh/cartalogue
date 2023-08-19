@@ -11,6 +11,10 @@ abstract class AppConstants {
   static const circularRadius12 = Radius.circular(12.0);
   static const circularRadius16 = Radius.circular(16.0);
 
+  static const roundedRectangleBorder12 = RoundedRectangleBorder(
+    borderRadius: borderRadius12,
+  );
+
   // Spacing
   static const double spacing2 = 2.0;
   static const double spacing4 = 4.0;
