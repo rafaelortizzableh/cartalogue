@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/core.dart';
@@ -58,37 +58,23 @@ class _CarMakeTileState extends State<CarMakeTile> {
     );
   }
 
-  Future<void> _onTileOpened() async {
-    final verticalPadding = MediaQuery.paddingOf(context).vertical;
-    final viewPortHeight = MediaQuery.of(context).size.height;
-    final boxConstraints = BoxConstraints.tightFor(
-      height: viewPortHeight - verticalPadding - AppConstants.spacing16,
-    );
-    final contentWidth = MediaQuery.of(context).size.width / 2;
+  void _onTileOpened() {
     unawaited(
-      showModalBottomSheet(
-        isScrollControlled: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(AppConstants.spacing16),
-          ),
-        ),
-        constraints: boxConstraints,
+      CarMakeDetailBottomSheet.show(
         context: context,
-        builder: (context) {
-          return CarMakeDetailBottomSheet(
-            colorScheme: _colorScheme,
-            contentWidth: contentWidth,
-            minRadius: _minRadius,
-            carMake: widget.carMake,
-          );
-        },
+        carMake: widget.carMake,
+        colorScheme: _colorScheme,
+        minRadius: _minRadius,
       ),
     );
   }
 
   MaterialColor _assignColorFromIndexAndId(int index, int id) {
-    const primaryColors = Colors.primaries;
+    final primaryColors = Colors.primaries
+        .where(
+          (color) => color != Colors.yellow,
+        )
+        .toList();
 
     final indexSeed = index + 1;
 
@@ -126,25 +112,70 @@ class CarMakeDetailBottomSheet extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Spacer(),
-            Center(
-              child: SizedBox(
-                width: contentWidth,
-                child: AspectRatio(
-                  aspectRatio: CarMakeTile.cardAspectRatio,
-                  child: _CarMakeTileContent(
-                    colorScheme: colorScheme,
-                    minRadius: minRadius,
-                    carMake: carMake,
-                  ),
+            SizedBox(
+              width: contentWidth,
+              child: AspectRatio(
+                aspectRatio: CarMakeTile.cardAspectRatio,
+                child: _CarMakeTileContent(
+                  colorScheme: colorScheme,
+                  minRadius: minRadius,
+                  carMake: carMake,
                 ),
               ),
             ),
             const Spacer(flex: 3),
-            // TODO(rafaelortizzableh): Add like button
+            Flexible(
+              child: LikeCarMakeIconButton(
+                carMake: carMake,
+                colorScheme: colorScheme,
+              ),
+            ),
             const Spacer(),
           ],
         ),
       ),
+    );
+  }
+
+  static Future<dynamic> show({
+    required BuildContext context,
+    required CarMakeModel carMake,
+    required ColorScheme colorScheme,
+    required double minRadius,
+  }) async {
+    final verticalPadding = MediaQuery.paddingOf(context).vertical;
+    final viewPortHeight = MediaQuery.of(context).size.height;
+    final boxConstraints = BoxConstraints.tightFor(
+      height: viewPortHeight - verticalPadding - AppConstants.spacing16,
+    );
+    final contentWidth = MediaQuery.of(context).size.width * 0.33;
+
+    // This allows us to use the parent container of the current context
+    // as the parent container for the bottom sheet.
+    // This is needed to allow the [LikeCarMakeIconButton] to be
+    // rendered on tests.
+    //
+    // More info:
+    // https://docs-v2.riverpod.dev/ko/docs/concepts/scopes#showing-dialogs
+    final parentContainer = ProviderScope.containerOf(context);
+
+    return await showModalBottomSheet(
+      useRootNavigator: true,
+      isScrollControlled: true,
+      shape: AppConstants.roundedRectangleVerticalBorder16,
+      constraints: boxConstraints,
+      context: context,
+      builder: (_) {
+        return ProviderScope(
+          parent: parentContainer,
+          child: CarMakeDetailBottomSheet(
+            colorScheme: colorScheme,
+            contentWidth: contentWidth,
+            minRadius: minRadius,
+            carMake: carMake,
+          ),
+        );
+      },
     );
   }
 }
@@ -167,7 +198,7 @@ class _CarMakeTileContent extends StatelessWidget {
       children: [
         Flexible(
           child: CircleAvatar(
-            backgroundColor: colorScheme.onPrimary,
+            backgroundColor: Colors.white,
             minRadius: minRadius,
             child: Text(
               carMake.name[0].toUpperCase(),
@@ -182,7 +213,7 @@ class _CarMakeTileContent extends StatelessWidget {
         Text(
           carMake.name,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: colorScheme.onPrimary,
+                color: Colors.white,
               ),
           textAlign: TextAlign.center,
           maxLines: 2,

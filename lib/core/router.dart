@@ -52,21 +52,16 @@ class RouterNotifier extends ChangeNotifier {
       pageBuilder: (context, state) => const MaterialPage(
         child: CarManufacturerDetailsScreen(),
       ),
+      routes: const [],
     ),
-    // GoRoute(
-    //   name: ImageViewer.routeName,
-    //   path: ImageViewer.routeName,
-    //   builder: (context, state) {
-    //     final imageUrl =
-    //         state.uri.queryParameters[ImageViewer.imageUrlQueryParam];
-    //     final heroTag =
-    //         state.uri.queryParameters[ImageViewer.heroTagQueryParam];
-    //     return ImageViewer(
-    //       heroTag: heroTag,
-    //       imageUrl: imageUrl,
-    //     );
-    //   },
-    // ),
+    GoRoute(
+      path: LikedCarMakesScreen.routeName,
+      name: LikedCarMakesScreen.routeName,
+      pageBuilder: (context, state) => const MaterialPage(
+        fullscreenDialog: true,
+        child: LikedCarMakesScreen(),
+      ),
+    ),
   ];
 
   static CustomTransitionPage _fadeTransition(Widget child) {
@@ -75,20 +70,6 @@ class RouterNotifier extends ChangeNotifier {
       transitionsBuilder: (_, animation, ___, child) {
         return FadeTransition(opacity: animation, child: child);
       },
-    );
-  }
-
-  static _materialPageRoute(Widget child) {
-    return MaterialPageRoute(builder: (context) => child);
-  }
-
-  static _modalBottomSheetRoute(
-    Widget child, {
-    bool isScrollControlled = true,
-  }) {
-    return ModalBottomSheetRoute(
-      builder: (context) => child,
-      isScrollControlled: isScrollControlled,
     );
   }
 }

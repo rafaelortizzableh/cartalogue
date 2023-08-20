@@ -15,6 +15,12 @@ abstract class AppConstants {
     borderRadius: borderRadius12,
   );
 
+  static const roundedRectangleVerticalBorder16 = RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(
+      top: Radius.circular(spacing16),
+    ),
+  );
+
   // Spacing
   static const double spacing2 = 2.0;
   static const double spacing4 = 4.0;

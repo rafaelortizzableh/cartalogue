@@ -44,3 +44,11 @@ class MockCarManufacturerDetailsController
 
   void setState(CarManufacturerDetailsState state) => this.state = state;
 }
+
+class MockLikedCarMakesController extends StateNotifier<Set<CarMakeModel>>
+    with Mock
+    implements LikedCarMakesController {
+  MockLikedCarMakesController(super.state);
+
+  void setState(Set<CarMakeModel> state) => this.state = state;
+}

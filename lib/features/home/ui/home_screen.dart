@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -14,7 +15,13 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cartalogue'),
-        actions: const [_ThemeLinkIcon()],
+        actions: [
+          IconButton(
+            icon: const Icon(CupertinoIcons.heart_circle),
+            onPressed: () => context.push(LikedCarMakesScreen.routeName),
+          ),
+          const _ThemeLinkIcon(),
+        ],
       ),
       body: const CarManufacturersList(),
     );
