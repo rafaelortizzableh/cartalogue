@@ -26,6 +26,8 @@ abstract class CarManufacturersService {
   Future<void> saveCarManufacturersLocally({
     required List<CarManufacturerModel> carManufacturers,
   });
+
+  Future<List<CarMakeModel>> getCarMakes(int manufacturerId);
 }
 
 class SharedPreferencesAndNHTSACarManufacturersService
@@ -97,6 +99,33 @@ class SharedPreferencesAndNHTSACarManufacturersService
       savedCarManufacturersKey,
       carManufacturersJson,
     );
+  }
+
+  @override
+  Future<List<CarMakeModel>> getCarMakes(int manufacturerId) async {
+    try {
+      final response = await _dio.get(
+        '$_nhtsaApiBaseUrl/GetMakeForManufacturer/$manufacturerId?format=$_defaultFormat',
+      );
+
+      final makes = response.data['Results'] as List<dynamic>;
+
+      final remoteEntities =
+          makes.map((map) => CarMakeRemoteEntity.fromMap(map));
+
+      final carMakes =
+          remoteEntities.map((entity) => CarMakeModel.fromRemoteEntity(entity));
+
+      return carMakes.toList();
+    } on DioException catch (e) {
+      final message = e.message ?? 'Something went wrong';
+      throw NHTSAApiRequestFailure(
+        message: message,
+        statusCode: e.response?.statusCode ?? 400,
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 }
 

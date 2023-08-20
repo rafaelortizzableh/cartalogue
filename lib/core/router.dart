@@ -45,15 +45,14 @@ class RouterNotifier extends ChangeNotifier {
         fullscreenDialog: true,
         child: ThemeModeScreen(),
       ),
-      // pageBuilder: (context, state) => _modalBottomSheetRoute(
-      //   const ThemeScreen(),
-      // ),
     ),
-    // GoRoute(
-    //   path: LoadingScreen.routeName,
-    //   name: LoadingScreen.routeName,
-    //   pageBuilder: (context, state) => _fadeTransition(const LoadingScreen()),
-    // ),
+    GoRoute(
+      path: CarManufacturerDetailsScreen.routeName,
+      name: CarManufacturerDetailsScreen.routeName,
+      pageBuilder: (context, state) => const MaterialPage(
+        child: CarManufacturerDetailsScreen(),
+      ),
+    ),
     // GoRoute(
     //   name: ImageViewer.routeName,
     //   path: ImageViewer.routeName,
@@ -67,27 +66,6 @@ class RouterNotifier extends ChangeNotifier {
     //       imageUrl: imageUrl,
     //     );
     //   },
-    // ),
-    // GoRoute(
-    //   path: ManufacturersScreen.routeName,
-    //   name: ManufacturersScreen.routeName,
-    //   pageBuilder: (context, state) =>
-    //       _fadeTransition(const ManufacturersScreen()),
-    //   routes: [
-    //     GoRoute(
-    //       path: ManufacturerDetailScreen.routeName,
-    //       name: ManufacturerDetailScreen.routeName,
-    //       pageBuilder: (context, state) {
-    //         final manufacturerId = state.uri.queryParameters[
-    //             ManufacturerDetailScreen.manufacturerIdQueryParam];
-    //         return _materialPageRoute(
-    //           ManufacturerDetailScreen(
-    //             manufacturerId: manufacturerId,
-    //           ),
-    //         );
-    //       },
-    //     ),
-    //   ],
     // ),
   ];
 

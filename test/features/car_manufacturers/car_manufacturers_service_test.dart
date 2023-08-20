@@ -160,5 +160,67 @@ void main() {
         equals(fakeManifacturerModels),
       );
     });
+
+    test(
+        'Given a selected car manufcaturer, '
+        'when getCarMakes is called, '
+        'then a list of car makes is returned', () async {
+      // Given
+      final fakeCarMakesRemoteEntities = [
+        const CarMakeRemoteEntity(
+          makeId: 474,
+          makeName: 'HONDA',
+          mfrName: 'HONDA MOTOR CO., LTD',
+        ),
+        const CarMakeRemoteEntity(
+          makeId: 475,
+          makeName: 'ACURA',
+          mfrName: 'HONDA MOTOR CO., LTD',
+        ),
+        const CarMakeRemoteEntity(
+          makeId: 542,
+          makeName: 'ISUZU',
+          mfrName: 'HONDA MOTOR CO., LTD',
+        ),
+      ];
+
+      final mockPreferences = await SharedPreferences.getInstance();
+
+      final mockSharedPreferencesService =
+          SharedPreferencesService(mockPreferences);
+
+      dioAdapter.onGet(
+        'https://vpic.nhtsa.dot.gov/api/vehicles/GetMakeForManufacturer/987?format=json',
+        (request) => request.reply(200, {
+          'Count': fakeCarMakesRemoteEntities.length,
+          'Message': 'Results returned successfully',
+          'SearchCriteria': 'Manufacturer: 987',
+          'Results': fakeCarMakesRemoteEntities.map((e) => e.toMap()).toList(),
+        }),
+      );
+
+      final service = SharedPreferencesAndNHTSACarManufacturersService(
+        dio,
+        mockSharedPreferencesService,
+      );
+
+      // When
+      final carMakes = await service.getCarMakes(987);
+
+      // Then
+      expect(
+        carMakes,
+        isA<List<CarMakeModel>>(),
+      );
+
+      final fakeCarMakeModels = fakeCarMakesRemoteEntities
+          .map((e) => CarMakeModel.fromRemoteEntity(e))
+          .toList();
+
+      expect(
+        carMakes,
+        equals(fakeCarMakeModels),
+      );
+    });
   });
 }

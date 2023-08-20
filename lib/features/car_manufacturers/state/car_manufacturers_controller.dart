@@ -119,4 +119,10 @@ class CarManufacturersController extends StateNotifier<CarManufacturersState> {
       carManufacturers: carManifacturersToSave,
     ));
   }
+
+  void selectManufacturer(int manufacturerId) {
+    state = state.copyWith(
+      selectedManufacturerId: manufacturerId,
+    );
+  }
 }

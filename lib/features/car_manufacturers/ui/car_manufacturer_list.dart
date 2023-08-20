@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/core.dart';
 import '../../features.dart';
@@ -72,17 +73,24 @@ class CarManufacturersList extends ConsumerWidget {
         final manufacturer = manufacturers[index];
         return CarManufacturerCard(
           manufacturer: manufacturer,
-          onTap: (manufacturer) {
-            // TODO(rafaelortizzableh): Implement navigation to manufacturer details.
-
-            // context.push(
-            //   CarManufacturerDetailsScreen.routeName,
-            //   arguments: manufacturer,
-            // );
-          },
+          onTap: (manufacturer) => _onCarManufacturerTap(
+            context,
+            ref,
+            manufacturer.id,
+          ),
         );
       },
     );
+  }
+
+  void _onCarManufacturerTap(
+    BuildContext context,
+    WidgetRef ref,
+    int carManufacturerId,
+  ) {
+    final controller = ref.read(carManufacturersControllerProvider.notifier);
+    controller.selectManufacturer(carManufacturerId);
+    context.push(CarManufacturerDetailsScreen.routeName);
   }
 
   Future<void> _onRefresh(WidgetRef ref) async {
@@ -104,24 +112,26 @@ class ErrorLoadingManufacturers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          errorMessage,
-          textAlign: TextAlign.center,
-        ),
-        AppSpacing.verticalSpacing8,
-        TextButton.icon(
-          icon: const Icon(Icons.refresh),
-          label: const Text(
-            'Refresh',
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            errorMessage,
             textAlign: TextAlign.center,
           ),
-          onPressed: () => unawaited(onRefresh()),
-        ),
-      ],
+          AppSpacing.verticalSpacing8,
+          TextButton.icon(
+            icon: const Icon(Icons.refresh),
+            label: const Text(
+              'Refresh',
+              textAlign: TextAlign.center,
+            ),
+            onPressed: () => unawaited(onRefresh()),
+          ),
+        ],
+      ),
     );
   }
 

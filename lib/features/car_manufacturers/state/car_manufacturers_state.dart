@@ -12,6 +12,7 @@ class CarManufacturersState extends Equatable {
     this.lastRemotePageFetched = 0,
     this.isLoadingMore = false,
     this.hasReachedMax = false,
+    this.selectedManufacturerId,
   });
 
   factory CarManufacturersState.initial() {
@@ -23,6 +24,7 @@ class CarManufacturersState extends Equatable {
   final int lastRemotePageFetched;
   final bool isLoadingMore;
   final bool hasReachedMax;
+  final int? selectedManufacturerId;
 
   CarManufacturersState copyWith({
     bool? isDeviceOnline,
@@ -30,6 +32,7 @@ class CarManufacturersState extends Equatable {
     int? lastRemotePageFetched,
     bool? isLoadingMore,
     bool? hasReachedMax,
+    int? selectedManufacturerId,
   }) {
     return CarManufacturersState(
       isDeviceOnline: isDeviceOnline ?? this.isDeviceOnline,
@@ -38,15 +41,18 @@ class CarManufacturersState extends Equatable {
           lastRemotePageFetched ?? this.lastRemotePageFetched,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      selectedManufacturerId:
+          selectedManufacturerId ?? this.selectedManufacturerId,
     );
   }
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         isDeviceOnline,
         carManufacturers,
         lastRemotePageFetched,
         isLoadingMore,
         hasReachedMax,
+        selectedManufacturerId,
       ];
 }
