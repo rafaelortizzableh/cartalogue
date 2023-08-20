@@ -15,14 +15,36 @@ class LikedCarMakesScreen extends ConsumerWidget {
     final likedCarMakes = ref.watch(likedCarMakesControllerProvider);
     final isLikedCarMakesEmpty = likedCarMakes.isEmpty;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Liked Car Makes'),
-      ),
-      body: isLikedCarMakesEmpty
-          ? const NoLikedCarMakes()
-          : CarMakesList(
+      body: CustomScrollView(
+        slivers: [
+          const SliverAppBar.large(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  CupertinoIcons.heart_fill,
+                  color: Colors.red,
+                ),
+                AppSpacing.horizontalSpacing4,
+                Text(
+                  'Liked Car Makes',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+            floating: true,
+            centerTitle: true,
+          ),
+          const SliverPadding(padding: AppConstants.verticalPadding4),
+          if (isLikedCarMakesEmpty) ...[
+            const NoLikedCarMakes()
+          ] else ...[
+            CarMakesList(
               carMakes: likedCarMakes.toList(),
             ),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -32,18 +54,20 @@ class NoLikedCarMakes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            CupertinoIcons.heart_slash_circle_fill,
-            size: 100,
-            color: Colors.red,
-          ),
-          AppSpacing.verticalSpacing12,
-          Text('No liked car makes found'),
-        ],
+    return const SliverFillRemaining(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              CupertinoIcons.heart_slash_circle_fill,
+              size: 100,
+              color: Colors.red,
+            ),
+            AppSpacing.verticalSpacing12,
+            Text('No liked car makes found'),
+          ],
+        ),
       ),
     );
   }

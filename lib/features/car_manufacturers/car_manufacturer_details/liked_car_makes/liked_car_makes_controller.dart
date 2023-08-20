@@ -49,6 +49,8 @@ class LikedCarMakesController extends StateNotifier<Set<CarMakeModel>> {
     final newValues = [
       ...state.map((carMake) => carMake.toJson()),
     ];
+
+    if (!mounted) return;
     await sharedPreferencesService.saveListOfStringsToSharedPreferences(
       _likedCarMakeIdsKey,
       newValues,

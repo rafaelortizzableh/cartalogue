@@ -14,13 +14,8 @@ class CarManufacturerDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCarMakesEmpty = carMakes.isEmpty;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(manufacturerName),
-      ),
-      body: isCarMakesEmpty
-          ? EmptyCarMakes(manufacturerName: manufacturerName)
-          : CarMakesList(carMakes: carMakes),
-    );
+    return isCarMakesEmpty
+        ? EmptyCarMakes(manufacturerName: manufacturerName)
+        : CarMakesList(carMakes: carMakes);
   }
 }

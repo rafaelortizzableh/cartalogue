@@ -13,18 +13,20 @@ class CarMakesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      gridDelegate: _gridDelegate,
-      padding: AppConstants.padding12,
-      itemCount: carMakes.length,
-      itemBuilder: (context, index) {
-        final carMake = carMakes[index];
-        return CarMakeTile(
-          key: _generateKey(carMake),
-          carMake: carMake,
-          index: index,
-        );
-      },
+    return SliverPadding(
+      padding: AppConstants.horizontalPadding8,
+      sliver: SliverGrid.builder(
+        gridDelegate: _gridDelegate,
+        itemCount: carMakes.length,
+        itemBuilder: (context, index) {
+          final carMake = carMakes[index];
+          return CarMakeTile(
+            key: _generateKey(carMake),
+            carMake: carMake,
+            index: index,
+          );
+        },
+      ),
     );
   }
 

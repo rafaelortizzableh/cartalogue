@@ -1,6 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 abstract class AppConstants {
+  // Environment
+
+  /// Whether the app is currently running in the test mode.
+  static final isTestEnvironment =
+      Platform.environment.containsKey('FLUTTER_TEST');
+
   // Border Radius
   static const borderRadius4 = BorderRadius.all(circularRadius4);
   static const borderRadius8 = BorderRadius.all(circularRadius8);

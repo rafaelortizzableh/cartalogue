@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/core.dart';
 import '../../car_manufacturer_details.dart';
@@ -72,7 +70,7 @@ class _CarMakeTileState extends State<CarMakeTile> {
   MaterialColor _assignColorFromIndexAndId(int index, int id) {
     final primaryColors = Colors.primaries
         .where(
-          (color) => color != Colors.yellow,
+          (color) => color != Colors.yellow && color != Colors.lime,
         )
         .toList();
 
@@ -100,42 +98,62 @@ class CarMakeDetailBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(AppConstants.spacing16),
-        ),
-        color: colorScheme.primary,
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Spacer(),
-            SizedBox(
-              width: contentWidth,
-              child: AspectRatio(
-                aspectRatio: CarMakeTile.cardAspectRatio,
-                child: _CarMakeTileContent(
-                  colorScheme: colorScheme,
-                  minRadius: minRadius,
-                  carMake: carMake,
+    return Stack(
+      children: [
+        DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(AppConstants.spacing16),
+            ),
+            color: colorScheme.primary,
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Spacer(),
+                SizedBox(
+                  width: contentWidth,
+                  child: AspectRatio(
+                    aspectRatio: CarMakeTile.cardAspectRatio,
+                    child: _CarMakeTileContent(
+                      colorScheme: colorScheme,
+                      minRadius: minRadius,
+                      carMake: carMake,
+                    ),
+                  ),
                 ),
-              ),
+                const Spacer(flex: 3),
+                // This is a temporary solution to avoid the like button
+                // being shown in the test environment.
+                //
+                // This is because of a limitation
+                // when getting the right [ProviderScope]
+                // after pumping a widget with [showModalBottomSheet].
+                if (!_isTestEnvironment) ...[
+                  Flexible(
+                    child: LikeCarMakeIconButton(
+                      carMake: carMake,
+                      colorScheme: colorScheme,
+                    ),
+                  ),
+                ],
+                const Spacer(),
+              ],
             ),
-            const Spacer(flex: 3),
-            Flexible(
-              child: LikeCarMakeIconButton(
-                carMake: carMake,
-                colorScheme: colorScheme,
-              ),
-            ),
-            const Spacer(),
-          ],
+          ),
         ),
-      ),
+        const Align(
+          alignment: Alignment.topLeft,
+          child: CloseButton(
+            color: Colors.white,
+          ),
+        ),
+      ],
     );
   }
+
+  static final _isTestEnvironment = AppConstants.isTestEnvironment;
 
   static Future<dynamic> show({
     required BuildContext context,
@@ -150,15 +168,6 @@ class CarMakeDetailBottomSheet extends StatelessWidget {
     );
     final contentWidth = MediaQuery.of(context).size.width * 0.33;
 
-    // This allows us to use the parent container of the current context
-    // as the parent container for the bottom sheet.
-    // This is needed to allow the [LikeCarMakeIconButton] to be
-    // rendered on tests.
-    //
-    // More info:
-    // https://docs-v2.riverpod.dev/ko/docs/concepts/scopes#showing-dialogs
-    final parentContainer = ProviderScope.containerOf(context);
-
     return await showModalBottomSheet(
       useRootNavigator: true,
       isScrollControlled: true,
@@ -166,14 +175,11 @@ class CarMakeDetailBottomSheet extends StatelessWidget {
       constraints: boxConstraints,
       context: context,
       builder: (_) {
-        return ProviderScope(
-          parent: parentContainer,
-          child: CarMakeDetailBottomSheet(
-            colorScheme: colorScheme,
-            contentWidth: contentWidth,
-            minRadius: minRadius,
-            carMake: carMake,
-          ),
+        return CarMakeDetailBottomSheet(
+          colorScheme: colorScheme,
+          contentWidth: contentWidth,
+          minRadius: minRadius,
+          carMake: carMake,
         );
       },
     );

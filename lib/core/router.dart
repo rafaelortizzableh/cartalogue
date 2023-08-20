@@ -58,7 +58,6 @@ class RouterNotifier extends ChangeNotifier {
       path: LikedCarMakesScreen.routeName,
       name: LikedCarMakesScreen.routeName,
       pageBuilder: (context, state) => const MaterialPage(
-        fullscreenDialog: true,
         child: LikedCarMakesScreen(),
       ),
     ),

@@ -29,7 +29,6 @@ class _LikeCarMakeIconButtonState extends ConsumerState<LikeCarMakeIconButton> {
   Widget build(BuildContext context) {
     final likedCarMakeIds = ref.watch(likedCarMakesControllerProvider);
     final isLiked = likedCarMakeIds.contains(widget.carMake);
-
     return AnimatedScale(
       duration: kThemeAnimationDuration,
       scale: _likeButtonScale,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/core.dart';
 import '../../../features.dart';
 
 class CarManufacturerDetailsScreen extends ConsumerWidget {
@@ -39,20 +40,25 @@ class CarManufacturerDetailsScreen extends ConsumerWidget {
       orElse: () => false,
     );
 
-    if (isCarMakesListLoading) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text(manufacturerName),
-        ),
-        body: const Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
-    return CarManufacturerDetails(
-      manufacturerName: manufacturerName,
-      carMakes: carMakes,
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar.large(
+            title: Text(
+              manufacturerName,
+              textAlign: TextAlign.center,
+            ),
+            floating: true,
+            centerTitle: true,
+          ),
+          const SliverPadding(padding: AppConstants.verticalPadding4),
+          CarManufacturerDetailsContent(
+            manufacturerName: manufacturerName,
+            carMakes: carMakes,
+            isCarMakesListLoading: isCarMakesListLoading,
+          ),
+        ],
+      ),
     );
   }
 }

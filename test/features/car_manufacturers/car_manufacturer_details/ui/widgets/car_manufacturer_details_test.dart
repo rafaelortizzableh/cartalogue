@@ -1,4 +1,5 @@
 import 'package:cartalogue/features/features.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../../helpers/helpers.dart';
@@ -22,13 +23,17 @@ void main() {
         ];
 
         await tester.pumpApp(
-          CarManufacturerDetails(
-            manufacturerName: 'BMW Group',
-            carMakes: carMakes,
+          CustomScrollView(
+            slivers: [
+              CarManufacturerDetails(
+                manufacturerName: 'BMW Group',
+                carMakes: carMakes,
+              ),
+            ],
           ),
         );
 
-        expect(find.byType(CarMakesList), findsOneWidget);
+        expect(find.byType(CarMakeTile), findsNWidgets(carMakes.length));
       },
     );
 
@@ -38,9 +43,13 @@ void main() {
       'Then the EmptyCarMakes is rendered',
       (tester) async {
         await tester.pumpApp(
-          const CarManufacturerDetails(
-            manufacturerName: 'BMW Group',
-            carMakes: [],
+          const CustomScrollView(
+            slivers: [
+              CarManufacturerDetails(
+                manufacturerName: 'BMW Group',
+                carMakes: [],
+              ),
+            ],
           ),
         );
 
@@ -48,43 +57,41 @@ void main() {
       },
     );
 
-    // testWidgets(
-    //   'Given a list of car makes, '
-    //   'when a car make is tapped, '
-    //   'then a modal bottom sheet is rendered.',
-    //   (tester) async {
-    //     TestWidgetsFlutterBinding.ensureInitialized();
+    testWidgets(
+      'Given a list of car makes, '
+      'when a car make is tapped, '
+      'then a modal bottom sheet is rendered.',
+      (tester) async {
+        final carMakes = [
+          const CarMakeModel(
+            id: 1,
+            name: 'Mini',
+          ),
+          const CarMakeModel(
+            id: 2,
+            name: 'BMW',
+          ),
+        ];
 
-    //     final carMakes = [
-    //       const CarMakeModel(
-    //         id: 1,
-    //         name: 'Mini',
-    //       ),
-    //       const CarMakeModel(
-    //         id: 2,
-    //         name: 'BMW',
-    //       ),
-    //     ];
+        await tester.pumpApp(
+          CustomScrollView(
+            slivers: [
+              CarManufacturerDetails(
+                manufacturerName: 'BMW Group',
+                carMakes: carMakes,
+              ),
+            ],
+          ),
+        );
 
-    //     final overrides = [
-    //       likedCarMakesControllerProvider.overrideWith(
-    //         (ref) => MockLikedCarMakesController({}),
-    //       ),
-    //     ];
+        await tester.tap(find.byType(CarMakeTile).first);
+        await tester.pumpAndSettle();
 
-    //     await tester.pumpApp(
-    //       CarManufacturerDetails(
-    //         manufacturerName: 'BMW Group',
-    //         carMakes: carMakes,
-    //       ),
-    //       overrides: overrides,
-    //     );
-
-    //     await tester.tap(find.byType(CarMakeTile).first);
-    //     await tester.pumpAndSettle();
-
-    //     expect(find.byType(CarMakeDetailBottomSheet), findsOneWidget);
-    //   },
-    // );
+        expect(
+          find.byType(CarMakeDetailBottomSheet),
+          findsOneWidget,
+        );
+      },
+    );
   });
 }
