@@ -46,7 +46,7 @@ class CarManufacturersList extends ConsumerWidget {
     }
 
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: GenericLoader());
     }
 
     if (manufacturers != null && manufacturers.isEmpty) {
@@ -267,7 +267,7 @@ class _LoadMoreButtonContent extends StatelessWidget {
           aspectRatio: 1.0,
           child: Padding(
             padding: AppConstants.padding4,
-            child: CircularProgressIndicator(color: Colors.white),
+            child: GenericLoader(color: Colors.white),
           ),
         ),
       );

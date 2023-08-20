@@ -1,5 +1,5 @@
+import 'package:cartalogue/core/core.dart';
 import 'package:cartalogue/features/features.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -8,7 +8,7 @@ import '../../../../helpers/helpers.dart';
 void main() {
   group('CarManufacturerDetailsScreen', () {
     testWidgets(
-      'renders NoSelectedCarManufacturer when no car manufacturer is selected',
+      'renders ErrorGettingCarManufacturerDetails when no car manufacturer is selected',
       (tester) async {
         const mockCarManifacturersDetailsState = CarManufacturerDetailsState(
           manufacturerId: null,
@@ -24,12 +24,12 @@ void main() {
           ),
         ]);
 
-        expect(find.byType(NoSelectedCarManufacturer), findsOneWidget);
+        expect(find.byType(ErrorGettingCarManufacturerDetails), findsOneWidget);
       },
     );
 
     testWidgets(
-      'renders NoSelectedCarManufacturer when no car manufacturer name is found',
+      'renders ErrorGettingCarManufacturerDetails when no car manufacturer name is found',
       (tester) async {
         const mockCarManifacturersDetailsState = CarManufacturerDetailsState(
           manufacturerName: null,
@@ -46,7 +46,30 @@ void main() {
           ),
         ]);
 
-        expect(find.byType(NoSelectedCarManufacturer), findsOneWidget);
+        expect(find.byType(ErrorGettingCarManufacturerDetails), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'renders ErrorGettingCarManufacturerDetails when there\'s a network error',
+      (tester) async {
+        const mockCarManifacturersDetailsState = CarManufacturerDetailsState(
+          manufacturerName: 'Mazda',
+          manufacturerId: 1,
+          carMakes: AsyncError(NHTSAApiRequestFailure, StackTrace.empty),
+        );
+
+        final mockCarManufacturersController =
+            MockCarManufacturerDetailsController(
+          mockCarManifacturersDetailsState,
+        );
+        await tester.pumpApp(const CarManufacturerDetailsScreen(), overrides: [
+          carManufacturerDetailsProvider.overrideWith(
+            (_) => mockCarManufacturersController,
+          ),
+        ]);
+
+        expect(find.byType(ErrorGettingCarManufacturerDetails), findsOneWidget);
       },
     );
 
@@ -81,7 +104,7 @@ void main() {
     );
 
     testWidgets(
-      'renders CircularProgressIndicator when car makes are loading',
+      'renders GenericLoader when car makes are loading',
       (tester) async {
         const mockCarManifacturersDetailsState = CarManufacturerDetailsState(
           manufacturerId: 1,
@@ -102,7 +125,7 @@ void main() {
           ],
         );
 
-        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        expect(find.byType(GenericLoader), findsOneWidget);
       },
     );
   });

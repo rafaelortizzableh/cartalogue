@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../core/core.dart';
 import '../../car_manufacturer_details.dart';
 
 class CarManufacturerDetailsContent extends StatelessWidget {
@@ -19,7 +20,7 @@ class CarManufacturerDetailsContent extends StatelessWidget {
     if (isCarMakesListLoading) {
       return const SliverFillRemaining(
         child: Center(
-          child: CircularProgressIndicator(),
+          child: GenericLoader(),
         ),
       );
     }

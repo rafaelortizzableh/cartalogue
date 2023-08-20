@@ -1,5 +1,4 @@
 import 'package:cartalogue/core/core.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:cartalogue/features/features.dart';
@@ -54,7 +53,7 @@ void main() {
     testWidgets(
       'Given no CarManifacturerModels, '
       'when the list is being loaded, '
-      'then it should display a CircularProgressIndicator.',
+      'then it should display a GenericLoader.',
       (tester) async {
         const carManufacturerState = CarManufacturersState(
           carManufacturers: AsyncValue.loading(),
@@ -76,14 +75,14 @@ void main() {
           ],
         );
 
-        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        expect(find.byType(GenericLoader), findsOneWidget);
       },
     );
 
     testWidgets(
         'Given an existing list of CarManufacturerModel, '
         'when there is more data being loaded, '
-        'then it should display a CircularProgressIndicator.', (tester) {
+        'then it should display a GenericLoader.', (tester) {
       final carManufacturers = {
         1: const CarManufacturerModel(
           id: 1,
@@ -118,7 +117,7 @@ void main() {
           ),
         ],
       ).then((_) {
-        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        expect(find.byType(GenericLoader), findsOneWidget);
       });
     });
 

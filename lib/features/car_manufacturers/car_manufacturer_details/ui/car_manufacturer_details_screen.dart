@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,13 +12,16 @@ class CarManufacturerDetailsScreen extends ConsumerWidget {
 
   static const routeName = '/carManufacturerDetails';
 
+  static const _networkErrorLabel = 'Network error';
+  static const _somethingWentWrongLabel = 'Something went wrong';
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedCarManufacturerId = ref.watch(
       carManufacturerDetailsProvider.select((state) => state.manufacturerId),
     );
     if (selectedCarManufacturerId == null) {
-      return const NoSelectedCarManufacturer();
+      return const ErrorGettingCarManufacturerDetails();
     }
 
     final carManufacturerDetails = ref.watch(
@@ -27,7 +31,23 @@ class CarManufacturerDetailsScreen extends ConsumerWidget {
     final manufacturerName = carManufacturerDetails.manufacturerName;
 
     if (manufacturerName == null) {
-      return const NoSelectedCarManufacturer();
+      return const ErrorGettingCarManufacturerDetails();
+    }
+
+    final error = carManufacturerDetails.carMakes.whenOrNull(
+      error: (error, _) => error,
+    );
+
+    if (error != null) {
+      final errorLabel = error is NHTSAApiRequestFailure
+          ? _networkErrorLabel
+          : _somethingWentWrongLabel;
+      return ErrorGettingCarManufacturerDetails(
+        errorText: errorLabel,
+        icon: error is NHTSAApiRequestFailure
+            ? CupertinoIcons.wifi_slash
+            : Icons.warning,
+      );
     }
 
     final carMakes = carManufacturerDetails.carMakes.maybeWhen(

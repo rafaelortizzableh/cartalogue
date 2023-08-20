@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:go_router/go_router.dart';
 
 import '../../features.dart';
@@ -14,42 +14,18 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Cartalogue'),
         actions: [
           IconButton(
             icon: const Icon(CupertinoIcons.heart_circle),
             onPressed: () => context.push(LikedCarMakesScreen.routeName),
           ),
-          const _ThemeLinkIcon(),
+          const ThemeLinkIcon(),
         ],
       ),
       body: const CarManufacturersList(),
+      floatingActionButton: const NetworkConnectivyFab(),
     );
-  }
-}
-
-class _ThemeLinkIcon extends ConsumerWidget {
-  const _ThemeLinkIcon();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeControllerProvider);
-    final icon = _assignIcon(themeMode);
-
-    return IconButton(
-      icon: Icon(icon),
-      onPressed: () => context.push(ThemeModeScreen.routeName),
-    );
-  }
-
-  IconData _assignIcon(ThemeMode themeMode) {
-    switch (themeMode) {
-      case ThemeMode.system:
-        return Icons.brightness_auto;
-      case ThemeMode.light:
-        return Icons.brightness_high;
-      case ThemeMode.dark:
-        return Icons.brightness_3;
-    }
   }
 }

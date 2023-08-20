@@ -5,14 +5,21 @@ import '../../../../../core/core.dart';
 import '../../../../features.dart';
 
 @visibleForTesting
-class NoSelectedCarManufacturer extends StatelessWidget {
-  const NoSelectedCarManufacturer({super.key});
+class ErrorGettingCarManufacturerDetails extends StatelessWidget {
+  const ErrorGettingCarManufacturerDetails({
+    super.key,
+    this.errorText = 'Please select a car manufacturer',
+    this.icon = Icons.warning,
+  });
+
+  final String errorText;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('No car manufacturer selected'),
+        title: const Text('Error getting car manufacturer details'),
         leading: BackButton(
           onPressed: () => _goToHome(context),
         ),
@@ -21,12 +28,12 @@ class NoSelectedCarManufacturer extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.warning,
+            Icon(
+              icon,
               size: 100,
             ),
             AppSpacing.verticalSpacing12,
-            const Text('Please select a car manufacturer'),
+            Text(errorText),
             AppSpacing.verticalSpacing16,
             ElevatedButton(
               onPressed: () => _goToHome(context),

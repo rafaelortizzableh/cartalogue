@@ -41,13 +41,6 @@ final selectedCarManufacturerProvider =
         .firstWhere(
           (manufacturer) => manufacturer?.id == selectedManufacturerId,
         );
-
-    // return manufacturers
-    //     .where((manufacturer) => manufacturer != null)
-    //     .firstWhere(
-    //       (manufacturer) => manufacturer?.id == selectedManufacturerId,
-    //       orElse: () => null,
-    //     );
   },
 );
 
@@ -89,15 +82,21 @@ class CarManufacturerDetailsController
 
     if (!mounted) return;
 
-    final makes = await service.getCarMakes(state.manufacturerId!);
+    try {
+      final makes = await service.getCarMakes(state.manufacturerId!);
 
-    if (!mounted) return;
+      if (!mounted) return;
 
-    state = state.copyWith(
-      carMakes: AsyncData({
-        for (final make in makes) make.id: make,
-      }),
-    );
+      state = state.copyWith(
+        carMakes: AsyncData({
+          for (final make in makes) make.id: make,
+        }),
+      );
+    } catch (error, stackTrace) {
+      state = state.copyWith(
+        carMakes: AsyncError(error, stackTrace),
+      );
+    }
   }
 }
 
