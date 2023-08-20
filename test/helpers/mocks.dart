@@ -22,6 +22,14 @@ class MockConnectivity extends Mock implements Connectivity {
     }
     return Future.value(ConnectivityResult.none);
   }
+
+  @override
+  Stream<ConnectivityResult> get onConnectivityChanged {
+    if (connectivityCase == ConnectivityCase.success) {
+      return Stream.value(ConnectivityResult.wifi);
+    }
+    return Stream.value(ConnectivityResult.none);
+  }
 }
 
 class MockCarManufacturersService extends Mock

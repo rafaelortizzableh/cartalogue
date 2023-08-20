@@ -21,10 +21,12 @@ abstract class CarManufacturersService {
     required int page,
   });
 
-  FutureOr<List<CarManufacturerModel>> fetchLocallySavedCarManufacturers();
+  FutureOr<({List<CarManufacturerModel> manufacturers, int lastPageFetched})>
+      fetchLocallySavedCarManufacturers();
 
   Future<void> saveCarManufacturersLocally({
     required List<CarManufacturerModel> carManufacturers,
+    required int page,
   });
 
   Future<List<CarMakeModel>> getCarMakes(int manufacturerId);
@@ -41,6 +43,9 @@ class SharedPreferencesAndNHTSACarManufacturersService
 
   @visibleForTesting
   static const savedCarManufacturersKey = 'saved_car_manufacturers';
+
+  @visibleForTesting
+  static const lastPageFetchedKey = 'car_manufacturers_last_page_fetched';
 
   static const _nhtsaApiBaseUrl = 'https://vpic.nhtsa.dot.gov/api/vehicles';
   static const _defaultFormat = 'json';
@@ -72,33 +77,50 @@ class SharedPreferencesAndNHTSACarManufacturersService
   }
 
   @override
-  List<CarManufacturerModel> fetchLocallySavedCarManufacturers() {
+  ({
+    List<CarManufacturerModel> manufacturers,
+    int lastPageFetched,
+  }) fetchLocallySavedCarManufacturers() {
     final savedManufacturers =
         _sharedPreferencesService.getListOfStringsFromSharedPreferences(
       savedCarManufacturersKey,
     );
 
     if (savedManufacturers == null || savedManufacturers.isEmpty) {
-      return [];
+      return (manufacturers: [], lastPageFetched: 0);
     }
+    final lastPageFetched =
+        _sharedPreferencesService.getIntFromSharedPreferences(
+      lastPageFetchedKey,
+    );
 
     final carManufacturers =
         savedManufacturers.map((json) => CarManufacturerModel.fromJson(json));
 
-    return carManufacturers.toList();
+    return (
+      manufacturers: carManufacturers.toList(),
+      lastPageFetched: lastPageFetched ?? 1,
+    );
   }
 
   @override
   Future<void> saveCarManufacturersLocally({
     required List<CarManufacturerModel> carManufacturers,
+    required int page,
   }) async {
     final carManufacturersJson =
         carManufacturers.map((manufacturer) => manufacturer.toJson()).toList();
 
-    await _sharedPreferencesService.saveListOfStringsToSharedPreferences(
-      savedCarManufacturersKey,
-      carManufacturersJson,
-    );
+    await Future.wait([
+      _sharedPreferencesService.saveListOfStringsToSharedPreferences(
+        savedCarManufacturersKey,
+        carManufacturersJson,
+      ),
+      _sharedPreferencesService.save(
+        lastPageFetchedKey,
+        page,
+      ),
+    ]);
   }
 
   @override

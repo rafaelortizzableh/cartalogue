@@ -50,6 +50,8 @@ void main() {
         SharedPreferences.setMockInitialValues({
           SharedPreferencesAndNHTSACarManufacturersService
               .savedCarManufacturersKey: savedList,
+          SharedPreferencesAndNHTSACarManufacturersService.lastPageFetchedKey:
+              1,
         });
         final mockPreferences = await SharedPreferences.getInstance();
 
@@ -65,11 +67,11 @@ void main() {
 
         // Then
         expect(
-          carManufacturers,
+          carManufacturers.manufacturers,
           isA<List<CarManufacturerModel>>(),
         );
         expect(
-          carManufacturers,
+          carManufacturers.manufacturers,
           equals(fakeManufacturersList),
         );
       },
@@ -84,6 +86,8 @@ void main() {
         SharedPreferences.setMockInitialValues({
           SharedPreferencesAndNHTSACarManufacturersService
               .savedCarManufacturersKey: [],
+          SharedPreferencesAndNHTSACarManufacturersService.lastPageFetchedKey:
+              0,
         });
         final mockPreferences = await SharedPreferences.getInstance();
 
@@ -99,19 +103,20 @@ void main() {
 
         // Then
         expect(
-          carManufacturers,
+          carManufacturers.manufacturers,
           isA<List<CarManufacturerModel>>(),
         );
         expect(
-          carManufacturers,
+          carManufacturers.manufacturers,
           isEmpty,
         );
       },
     );
 
     test(
-        'Given a list of car manufacturers, when fetchCarManufacturersRemotely is called, then it should return a list of car manufacturers',
-        () async {
+        'Given a list of car manufacturers, '
+        'when fetchCarManufacturersRemotely is called, '
+        'then it should return a list of car manufacturers.', () async {
       // Given
       final fakeManifacturerRemoteEntities = [
         const CarManufacturerRemoteEntity(
@@ -122,8 +127,9 @@ void main() {
         ),
       ];
       final mockPreferences = await SharedPreferences.getInstance();
-      final mockSharedPreferencesService =
-          SharedPreferencesService(mockPreferences);
+      final mockSharedPreferencesService = SharedPreferencesService(
+        mockPreferences,
+      );
 
       dioAdapter.onGet(
         'https://vpic.nhtsa.dot.gov/api/vehicles/getallmanufacturers?format=json&page=1',

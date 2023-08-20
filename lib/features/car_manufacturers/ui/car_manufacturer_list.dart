@@ -36,6 +36,8 @@ class CarManufacturersList extends ConsumerWidget {
         .carManufacturers
         .whenOrNull(error: (error, _) => error);
 
+    final isNetworkConnected = ref.watch(isNetworkConnectedProvider);
+
     if (error != null) {
       return ErrorLoadingManufacturers(
         onRefresh: () => _onRefresh(ref),
@@ -65,6 +67,7 @@ class CarManufacturersList extends ConsumerWidget {
         final isLoadMoreCard = index == manufacturers.length;
         if (isLoadMoreCard) {
           return LoadMoreManufacturers(
+            isNetworkConnected: isNetworkConnected,
             onLoadMore: () => _onRefresh(ref),
             isLoadingMore: isLoadingMore,
             hasReachedMax: hasReachedMax,
@@ -183,14 +186,18 @@ class LoadMoreManufacturers extends StatelessWidget {
     required this.onLoadMore,
     required this.isLoadingMore,
     required this.hasReachedMax,
+    required this.isNetworkConnected,
   });
 
   final Future<void> Function() onLoadMore;
   final bool isLoadingMore;
   final bool hasReachedMax;
+  final bool isNetworkConnected;
 
   @override
   Widget build(BuildContext context) {
+    final isButtonEnabled =
+        !hasReachedMax && !isLoadingMore && isNetworkConnected;
     return AnimatedSize(
       duration: kThemeAnimationDuration,
       child: ElevatedButton(
@@ -198,12 +205,13 @@ class LoadMoreManufacturers extends StatelessWidget {
           backgroundColor: _backgroundColor,
           shape: AppConstants.roundedRectangleBorder12,
         ),
-        onPressed: (!hasReachedMax && !isLoadingMore) ? onLoadMore : null,
+        onPressed: isButtonEnabled ? onLoadMore : null,
         child: AnimatedSize(
           duration: kThemeAnimationDuration,
           child: _LoadMoreButtonContent(
             hasReachedMax: hasReachedMax,
             isLoadingMore: isLoadingMore,
+            isNetworkConnected: isNetworkConnected,
           ),
         ),
       ),
@@ -211,6 +219,10 @@ class LoadMoreManufacturers extends StatelessWidget {
   }
 
   Color get _backgroundColor {
+    if (!isNetworkConnected) {
+      return CustomTheme.errorRed;
+    }
+
     if (isLoadingMore) {
       return Colors.pink;
     }
@@ -227,13 +239,27 @@ class _LoadMoreButtonContent extends StatelessWidget {
     super.key,
     required this.isLoadingMore,
     required this.hasReachedMax,
+    required this.isNetworkConnected,
   });
   final bool isLoadingMore;
   final bool hasReachedMax;
+  final bool isNetworkConnected;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textStyle = theme.textTheme.bodyLarge?.copyWith(
+      color: Colors.white,
+    );
+
+    if (!isNetworkConnected) {
+      return Text(
+        'No internet connection',
+        style: textStyle,
+        textAlign: TextAlign.center,
+      );
+    }
+
     if (isLoadingMore) {
       return const SizedBox(
         width: AppConstants.spacing32,
@@ -250,14 +276,14 @@ class _LoadMoreButtonContent extends StatelessWidget {
     if (hasReachedMax) {
       return Text(
         'No more manufacturers to load',
-        style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white),
+        style: textStyle,
         textAlign: TextAlign.center,
       );
     }
 
     return Text(
       'Load more',
-      style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white),
+      style: textStyle,
       textAlign: TextAlign.center,
     );
   }

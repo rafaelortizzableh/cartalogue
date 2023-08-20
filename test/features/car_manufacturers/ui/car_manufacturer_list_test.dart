@@ -1,3 +1,4 @@
+import 'package:cartalogue/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -158,6 +159,7 @@ void main() {
           carManufacturersControllerProvider.overrideWith(
             (_) => mockController,
           ),
+          isNetworkConnectedProvider.overrideWithValue(true),
         ],
       );
 
@@ -189,6 +191,7 @@ void main() {
         isDeviceOnline: true,
         isLoadingMore: false,
         hasReachedMax: true,
+        lastRemotePageFetched: 1,
       );
 
       final mockController = MockCarManufacturersController(
@@ -201,10 +204,56 @@ void main() {
           carManufacturersControllerProvider.overrideWith(
             (_) => mockController,
           ),
+          isNetworkConnectedProvider.overrideWithValue(true),
         ],
       );
 
       expect(find.text('No more manufacturers to load'), findsOneWidget);
+    });
+
+    testWidgets(
+        'Given an existing list of CarManufacturerModel, '
+        'when there is no internet connection, '
+        'then it should display the text "No internet connection".',
+        (tester) async {
+      final carManufacturers = {
+        1: const CarManufacturerModel(
+          id: 1,
+          name: 'Audi',
+          countryName: 'Germany',
+          fullName: 'Audi',
+        ),
+        2: const CarManufacturerModel(
+          id: 2,
+          name: 'BMW',
+          countryName: 'Germany',
+          fullName: 'Bayerische Motoren Werke AG',
+        ),
+      };
+
+      final carManufacturerState = CarManufacturersState(
+        carManufacturers: AsyncValue.data(carManufacturers),
+        isDeviceOnline: false,
+        isLoadingMore: false,
+        hasReachedMax: true,
+        lastRemotePageFetched: 1,
+      );
+
+      final mockController = MockCarManufacturersController(
+        carManufacturerState,
+      );
+
+      await tester.pumpApp(
+        const CarManufacturersList(),
+        overrides: [
+          carManufacturersControllerProvider.overrideWith(
+            (_) => mockController,
+          ),
+          isNetworkConnectedProvider.overrideWithValue(false),
+        ],
+      );
+
+      expect(find.text('No internet connection'), findsOneWidget);
     });
 
     testWidgets(

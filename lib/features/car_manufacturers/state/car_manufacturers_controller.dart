@@ -34,12 +34,12 @@ class CarManufacturersController extends StateNotifier<CarManufacturersState> {
           await carManufacturersService.fetchLocallySavedCarManufacturers();
       state = CarManufacturersState(
         carManufacturers: AsyncValue.data({
-          for (final manufacturer in carManufacturers) ...{
+          for (final manufacturer in carManufacturers.manufacturers) ...{
             manufacturer.id: manufacturer,
           },
         }),
         isDeviceOnline: false,
-        lastRemotePageFetched: 0,
+        lastRemotePageFetched: carManufacturers.lastPageFetched,
       );
     } catch (e, stackTrace) {
       state = CarManufacturersState(
@@ -112,11 +112,14 @@ class CarManufacturersController extends StateNotifier<CarManufacturersState> {
     final currentlySavedManufacturers =
         await carManufacturersService.fetchLocallySavedCarManufacturers();
     final carManifacturersToSave = carManufacturers.values.toList();
-    if (currentlySavedManufacturers == carManifacturersToSave) return;
+    if (currentlySavedManufacturers.manufacturers == carManifacturersToSave) {
+      return;
+    }
     if (!mounted) return;
 
     unawaited(carManufacturersService.saveCarManufacturersLocally(
       carManufacturers: carManifacturersToSave,
+      page: state.lastRemotePageFetched,
     ));
   }
 

@@ -126,11 +126,16 @@ void main() {
         when(() =>
                 mockCarManufacturersService.fetchLocallySavedCarManufacturers())
             .thenAnswer((invocation) => Future.value(
-                  fakeManufacturersList,
+                  (manufacturers: fakeManufacturersList, lastPageFetched: 1),
                 ));
 
         when(() => mockCarManufacturersService.saveCarManufacturersLocally(
-              carManufacturers: any(named: 'carManufacturers'),
+              carManufacturers: any(
+                named: 'carManufacturers',
+              ),
+              page: any(
+                named: 'page',
+              ),
             )).thenAnswer((invocation) => Future.value());
 
         final mockConnectivity = MockConnectivity(
