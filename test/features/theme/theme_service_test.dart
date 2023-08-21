@@ -34,7 +34,7 @@ void main() {
     );
 
     test(
-        'Given a themeService, '
+        'Given ThemeService, '
         'when getting the saved theme mode, '
         'then the correct theme mode should be returned.', () async {
       // Given
@@ -77,15 +77,15 @@ void main() {
         await themeService.updatePreferredColor(color);
 
         // Then
-        final savedTheme = mockSharedPreferencesService
-            .getStringFromSharedPreferences(ThemeConstants.selectedThemeKey)
-            .toThemeMode();
-        expect(savedTheme, color);
+        final savedPreferredColorIndex = mockSharedPreferencesService
+            .getIntFromSharedPreferences(ThemeConstants.preferredColorKey);
+        final expectedColor = Colors.primaries[savedPreferredColorIndex!];
+        expect(expectedColor, color);
       },
     );
 
     test(
-        'Given a themeService, '
+        'Given a ThemeService, '
         'when getting the saved theme mode, '
         'then the correct theme mode should be returned.', () async {
       // Given
