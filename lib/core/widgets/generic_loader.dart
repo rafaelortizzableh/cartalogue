@@ -1,4 +1,6 @@
+import 'package:cartalogue/features/theme/preferred_color_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class GenericLoader extends StatelessWidget {
   const GenericLoader({
@@ -19,13 +21,16 @@ class GenericLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = this.color ?? Theme.of(context).colorScheme.primary;
-    return Center(
-      child: _LoaderAnimation(
-        size: size,
-        color: color,
-      ),
-    );
+    return Consumer(builder: (context, ref, _) {
+      final preferredColor = ref.watch(preferredColorControllerProvider);
+      final loaderColor = color ?? preferredColor;
+      return Center(
+        child: _LoaderAnimation(
+          size: size,
+          color: loaderColor,
+        ),
+      );
+    });
   }
 }
 

@@ -34,11 +34,13 @@ extension PumpApp on WidgetTester {
       ),
     ).thenAnswer((_) async {});
     final mockLogger = loggerService ?? mockLoggerService;
+    const preferredColor = Colors.deepPurple;
+    final customTheme = CustomTheme(primaryColor: preferredColor);
 
     return await pumpWidget(
       MaterialApp(
         home: Theme(
-          data: CustomTheme.darkTheme(),
+          data: customTheme.darkTheme(preferredColor),
           child: Scaffold(
             body: ProviderScope(
               overrides: [

@@ -161,10 +161,10 @@ class CarMakeDetailBottomSheet extends StatelessWidget {
     required ColorScheme colorScheme,
     required double minRadius,
   }) async {
-    final verticalPadding = MediaQuery.paddingOf(context).vertical;
+    final verticalPadding = MediaQuery.paddingOf(context).top;
     final viewPortHeight = MediaQuery.of(context).size.height;
     final boxConstraints = BoxConstraints.tightFor(
-      height: viewPortHeight - verticalPadding - AppConstants.spacing16,
+      height: viewPortHeight - verticalPadding - AppConstants.spacing8,
     );
     final contentWidth = MediaQuery.of(context).size.width * 0.33;
 

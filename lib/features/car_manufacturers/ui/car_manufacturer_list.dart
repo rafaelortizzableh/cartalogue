@@ -59,6 +59,8 @@ class CarManufacturersList extends ConsumerWidget {
       return AppSpacing.emptySpace;
     }
 
+    final preferredColor = ref.watch(preferredColorControllerProvider);
+
     return ListView.separated(
       padding: AppConstants.padding12,
       itemCount: manufacturers.length + 1, // One extra item for load more card.
@@ -71,6 +73,7 @@ class CarManufacturersList extends ConsumerWidget {
             onLoadMore: () => _onRefresh(ref),
             isLoadingMore: isLoadingMore,
             hasReachedMax: hasReachedMax,
+            preferredColor: preferredColor,
           );
         }
         final manufacturer = manufacturers[index];
@@ -187,24 +190,23 @@ class LoadMoreManufacturers extends StatelessWidget {
     required this.isLoadingMore,
     required this.hasReachedMax,
     required this.isNetworkConnected,
+    required this.preferredColor,
   });
 
   final Future<void> Function() onLoadMore;
   final bool isLoadingMore;
   final bool hasReachedMax;
   final bool isNetworkConnected;
+  final Color preferredColor;
 
   @override
   Widget build(BuildContext context) {
     final isButtonEnabled =
         !hasReachedMax && !isLoadingMore && isNetworkConnected;
+
     return AnimatedSize(
       duration: kThemeAnimationDuration,
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: _backgroundColor,
-          shape: AppConstants.roundedRectangleBorder12,
-        ),
         onPressed: isButtonEnabled ? onLoadMore : null,
         child: AnimatedSize(
           duration: kThemeAnimationDuration,
@@ -216,20 +218,6 @@ class LoadMoreManufacturers extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Color get _backgroundColor {
-    if (!isNetworkConnected) {
-      return CustomTheme.errorRed;
-    }
-
-    if (isLoadingMore) {
-      return Colors.pink;
-    }
-    if (hasReachedMax) {
-      return CustomTheme.errorRed;
-    }
-    return CustomTheme.primaryColor;
   }
 }
 
@@ -247,15 +235,9 @@ class _LoadMoreButtonContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textStyle = theme.textTheme.bodyLarge?.copyWith(
-      color: Colors.white,
-    );
-
     if (!isNetworkConnected) {
-      return Text(
+      return const Text(
         'No internet connection',
-        style: textStyle,
         textAlign: TextAlign.center,
       );
     }
@@ -274,16 +256,14 @@ class _LoadMoreButtonContent extends StatelessWidget {
     }
 
     if (hasReachedMax) {
-      return Text(
+      return const Text(
         'No more manufacturers to load',
-        style: textStyle,
         textAlign: TextAlign.center,
       );
     }
 
-    return Text(
+    return const Text(
       'Load more',
-      style: textStyle,
       textAlign: TextAlign.center,
     );
   }

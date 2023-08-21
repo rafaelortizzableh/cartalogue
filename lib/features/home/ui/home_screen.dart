@@ -10,12 +10,14 @@ class HomeScreen extends StatelessWidget {
 
   static const routeName = '/';
 
+  static const _title = 'Car Manufacturers';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Cartalogue'),
+        title: const Text(_title),
         actions: [
           IconButton(
             icon: const Icon(CupertinoIcons.heart_circle),

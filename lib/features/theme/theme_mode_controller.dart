@@ -3,17 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'theme.dart';
 
-/// The [Provider] for the [ThemeModeService].
-final themeControllerProvider =
+/// The [Provider] for the [ThemeService].
+final themeModeControllerProvider =
     StateNotifierProvider<ThemeModeController, ThemeMode>(
-  (ref) => ThemeModeController(ref.watch(themeModeServiceProvider)),
+  (ref) => ThemeModeController(ref.watch(themeServiceProvider)),
 );
 
 /// A controller that manages the user's prefered theme mode.
 class ThemeModeController extends StateNotifier<ThemeMode> {
   ThemeModeController(this._themeService)
       : super(_themeService.getSavedThemeMode());
-  final ThemeModeService _themeService;
+  final ThemeService _themeService;
 
   /// Update and persist the ThemeMode based on the user's selection.
   Future<void> updateThemeMode(ThemeMode? newThemeMode) async {

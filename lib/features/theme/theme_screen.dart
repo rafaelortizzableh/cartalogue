@@ -5,36 +5,92 @@ import '../../core/core.dart';
 import '../features.dart';
 import 'theme.dart';
 
-class ThemeModeScreen extends ConsumerWidget {
-  const ThemeModeScreen({super.key});
+class ThemeScreen extends ConsumerWidget {
+  const ThemeScreen({super.key});
 
-  static const routeName = '/theme-mode';
+  static const routeName = '/theme';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentThemeMode = ref.watch(themeControllerProvider);
+    final currentThemeMode = ref.watch(themeModeControllerProvider);
+    final preferredColor = ref.watch(preferredColorControllerProvider);
+    final theme = Theme.of(context);
+    final foregroundColor =
+        preferredColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Theme Mode'),
-      ),
-      body: Padding(
-        padding: AppConstants.padding16,
-        child: GridView.builder(
-          gridDelegate: _themeSliverGridDelegate,
-          itemCount: ThemeMode.values.length,
-          itemBuilder: (coontext, index) {
-            final themeMode = ThemeMode.values[index];
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar.large(
+            centerTitle: true,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.palette,
+                  color: foregroundColor,
+                ),
+                AppSpacing.horizontalSpacing4,
+                const Text('Theme'),
+              ],
+            ),
+          ),
+          SliverPadding(
+            padding: AppConstants.padding8,
+            sliver: SliverToBoxAdapter(
+              child: Text(
+                'Theme Mode',
+                style: theme.textTheme.headlineSmall,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: AppConstants.padding16,
+            sliver: SliverGrid.builder(
+              gridDelegate: _themeSliverGridDelegate,
+              itemCount: ThemeMode.values.length,
+              itemBuilder: (coontext, index) {
+                final themeMode = ThemeMode.values[index];
 
-            return ThemeCard(
-              themeMode: themeMode,
-              isCurrentTheme: themeMode == currentThemeMode,
-              onThemeModeSelected: (themeMode) async => await ref
-                  .read(themeControllerProvider.notifier)
-                  .updateThemeMode(themeMode),
-            );
-          },
-        ),
+                return ThemeModeCard(
+                  preferredColor: preferredColor,
+                  themeMode: themeMode,
+                  isCurrentThemeMode: themeMode == currentThemeMode,
+                  onThemeModeSelected: (themeMode) async => await ref
+                      .read(themeModeControllerProvider.notifier)
+                      .updateThemeMode(themeMode),
+                );
+              },
+            ),
+          ),
+          SliverPadding(
+            padding: AppConstants.padding8,
+            sliver: SliverToBoxAdapter(
+              child: Text(
+                'Preferred Color',
+                style: theme.textTheme.headlineSmall,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: AppConstants.padding16,
+            sliver: SliverGrid.builder(
+              gridDelegate: _themeSliverGridDelegate,
+              itemCount: Colors.primaries.length,
+              itemBuilder: (coontext, index) {
+                final color = Colors.primaries[index];
+
+                return ColorCard(
+                  color: color,
+                  isPreferredColor: color == preferredColor,
+                  onPreferredColorSelected: (color) async => await ref
+                      .read(preferredColorControllerProvider.notifier)
+                      .updatePreferredColor(color),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -48,16 +104,18 @@ class ThemeModeScreen extends ConsumerWidget {
   );
 }
 
-class ThemeCard extends StatelessWidget {
-  const ThemeCard({
+class ThemeModeCard extends StatelessWidget {
+  const ThemeModeCard({
     super.key,
     required this.themeMode,
-    required this.isCurrentTheme,
+    required this.isCurrentThemeMode,
     required this.onThemeModeSelected,
+    required this.preferredColor,
   });
   final ThemeMode themeMode;
-  final bool isCurrentTheme;
+  final bool isCurrentThemeMode;
   final Function(ThemeMode) onThemeModeSelected;
+  final MaterialColor preferredColor;
 
   static const _themeTileMaxSize = 150.0;
   static const _themeTileAspectRatio = 1.0;
@@ -92,7 +150,7 @@ class ThemeCard extends StatelessWidget {
     final theme = Theme.of(context);
     final tileHighlightColor = _assignTileHighlightColor(
       brightness: theme.brightness,
-      isCurrentTheme: isCurrentTheme,
+      isCurrentTheme: isCurrentThemeMode,
     );
     return ConstrainedBox(
       constraints: const BoxConstraints(
@@ -145,15 +203,15 @@ class ThemeCard extends StatelessWidget {
                             ),
                             Expanded(
                               child: Container(
-                                decoration: const BoxDecoration(
-                                  color: CustomTheme.primaryColor,
+                                decoration: BoxDecoration(
+                                  color: preferredColor,
                                 ),
                               ),
                             ),
                             Expanded(
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: CustomTheme.primaryColor.withOpacity(
+                                  color: preferredColor.withOpacity(
                                     0.75,
                                   ),
                                   borderRadius: const BorderRadius.only(
@@ -171,7 +229,7 @@ class ThemeCard extends StatelessWidget {
                                 topRight: AppConstants.circularRadius12,
                                 topLeft: AppConstants.circularRadius12,
                               ),
-                              color: CustomTheme.primaryColor.withOpacity(0.75),
+                              color: preferredColor.withOpacity(0.75),
                             ),
                             child: const Center(
                               child: Icon(
@@ -201,6 +259,55 @@ class ThemeCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ColorCard extends StatelessWidget {
+  const ColorCard({
+    super.key,
+    required this.color,
+    required this.isPreferredColor,
+    required this.onPreferredColorSelected,
+  });
+
+  final MaterialColor color;
+  final bool isPreferredColor;
+  final Function(MaterialColor) onPreferredColorSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: AppConstants.borderRadius12,
+        border: Border.all(
+          color: isPreferredColor
+              ? theme.colorScheme.onBackground
+              : Colors.transparent,
+          width: AppConstants.spacing2,
+        ),
+      ),
+      child: InkWell(
+        onTap: () => onPreferredColorSelected(color),
+        borderRadius: AppConstants.borderRadius12,
+        child: Card(
+          color: color,
+          child: Center(
+            child: Text(
+              color.toDisplayString(),
+              style: _getTextStyle(theme.textTheme),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  TextStyle? _getTextStyle(TextTheme textTheme) {
+    return textTheme.bodyLarge?.copyWith(
+      color: color.computeLuminance() > 0.5 ? Colors.black : Colors.white,
     );
   }
 }

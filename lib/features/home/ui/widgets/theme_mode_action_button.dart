@@ -9,12 +9,12 @@ class ThemeLinkIcon extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeControllerProvider);
+    final themeMode = ref.watch(themeModeControllerProvider);
     final icon = _assignIcon(themeMode);
 
     return IconButton(
       icon: Icon(icon),
-      onPressed: () => context.push(ThemeModeScreen.routeName),
+      onPressed: () => context.push(ThemeScreen.routeName),
     );
   }
 

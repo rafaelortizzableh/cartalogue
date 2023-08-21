@@ -14,19 +14,22 @@ class LikedCarMakesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final likedCarMakes = ref.watch(likedCarMakesControllerProvider);
     final isLikedCarMakesEmpty = likedCarMakes.isEmpty;
+    final preferredColor = ref.watch(preferredColorControllerProvider);
+    final foregroundColor =
+        preferredColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          const SliverAppBar.large(
+          SliverAppBar.large(
             title: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   CupertinoIcons.heart_fill,
-                  color: Colors.red,
+                  color: foregroundColor,
                 ),
                 AppSpacing.horizontalSpacing4,
-                Text(
+                const Text(
                   'Liked Car Makes',
                   textAlign: TextAlign.center,
                 ),

@@ -7,16 +7,21 @@ import 'features/features.dart';
 class CartalogueApp extends ConsumerWidget {
   const CartalogueApp({super.key});
 
+  static const appTitle = 'Car Manufacturer Catalogue';
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
-    final theme = ref.watch(themeControllerProvider);
+    final themeMode = ref.watch(themeModeControllerProvider);
+    final customTheme = ref.watch(customThemeProvider);
+    final preferredColor = ref.watch(preferredColorControllerProvider);
+
     return MaterialApp.router(
-      title: 'Cartalogue',
+      title: appTitle,
       debugShowCheckedModeBanner: false,
-      theme: CustomTheme.lightTheme(),
-      darkTheme: CustomTheme.darkTheme(),
-      themeMode: theme,
+      theme: customTheme.lightTheme(preferredColor),
+      darkTheme: customTheme.darkTheme(preferredColor),
+      themeMode: themeMode,
       routeInformationProvider: router.routeInformationProvider,
       routeInformationParser: router.routeInformationParser,
       routerDelegate: router.routerDelegate,
