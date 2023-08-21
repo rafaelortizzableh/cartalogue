@@ -1,4 +1,6 @@
+export 'car_make_detail_bottom_sheet.dart';
 export 'car_make_tile.dart';
+export 'car_make_tile_content.dart';
 export 'car_makes_list.dart';
 export 'car_manufacturer_details.dart';
 export 'car_manufacturer_details_content.dart';
