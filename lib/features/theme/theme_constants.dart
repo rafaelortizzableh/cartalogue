@@ -4,9 +4,9 @@ abstract class ThemeConstants {
   static const lightThemeMode = 'light';
   static const darkThemeMode = 'dark';
   static const systemThemeMode = 'system';
-  static const lightThemeModeDisplayString = 'Light theme';
-  static const darkThemeModeDisplayString = 'Dark theme';
-  static const systemThemeModeDisplayString = 'System theme';
+  static const lightThemeModeDisplayString = 'Light';
+  static const darkThemeModeDisplayString = 'Dark';
+  static const systemThemeModeDisplayString = 'System';
 
   static const redThemeModeDisplayString = 'Red';
   static const pinkThemeModeDisplayString = 'Pink';

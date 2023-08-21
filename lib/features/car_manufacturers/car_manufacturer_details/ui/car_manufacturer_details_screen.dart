@@ -64,9 +64,13 @@ class CarManufacturerDetailsScreen extends ConsumerWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar.large(
-            title: Text(
-              manufacturerName,
-              textAlign: TextAlign.center,
+            title: Tooltip(
+              message: manufacturerName,
+              child: Text(
+                manufacturerName,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             floating: true,
             centerTitle: true,

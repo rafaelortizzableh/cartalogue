@@ -29,9 +29,12 @@ class LikedCarMakesScreen extends ConsumerWidget {
                   color: foregroundColor,
                 ),
                 AppSpacing.horizontalSpacing4,
-                const Text(
-                  'Liked Car Makes',
-                  textAlign: TextAlign.center,
+                const Expanded(
+                  child: Text(
+                    'Liked Car Makes',
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),

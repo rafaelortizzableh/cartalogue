@@ -31,7 +31,12 @@ class ThemeScreen extends ConsumerWidget {
                   color: foregroundColor,
                 ),
                 AppSpacing.horizontalSpacing4,
-                const Text('Theme'),
+                const Expanded(
+                  child: Text(
+                    'Theme',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ],
             ),
           ),

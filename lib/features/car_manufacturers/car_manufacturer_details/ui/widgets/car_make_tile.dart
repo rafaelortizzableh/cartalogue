@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
@@ -36,19 +37,25 @@ class _CarMakeTileState extends State<CarMakeTile> {
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: CarMakeTile.cardAspectRatio,
-      child: Card(
-        color: _colorScheme.primary,
-        child: InkWell(
-          onTap: _onTileOpened,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: AppConstants.spacing12,
-              horizontal: AppConstants.spacing12,
-            ),
-            child: _CarMakeTileContent(
-              colorScheme: _colorScheme,
-              minRadius: _minRadius,
-              carMake: widget.carMake,
+      child: Tooltip(
+        message: widget.carMake.name,
+        child: Card(
+          color: _colorScheme.primary,
+          child: InkWell(
+            onTap: _onTileOpened,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: AppConstants.spacing12,
+                horizontal: AppConstants.spacing12,
+              ),
+              child: FractionallySizedBox(
+                widthFactor: 0.8,
+                child: _CarMakeTileContent(
+                  colorScheme: _colorScheme,
+                  minRadius: _minRadius,
+                  carMake: widget.carMake,
+                ),
+              ),
             ),
           ),
         ),
@@ -70,7 +77,10 @@ class _CarMakeTileState extends State<CarMakeTile> {
   MaterialColor _assignColorFromIndexAndId(int index, int id) {
     final primaryColors = Colors.primaries
         .where(
-          (color) => color != Colors.yellow && color != Colors.lime,
+          (color) =>
+              color != Colors.yellow &&
+              color != Colors.lime &&
+              color != Colors.amber,
         )
         .toList();
 
@@ -113,7 +123,7 @@ class CarMakeDetailBottomSheet extends StatelessWidget {
               children: [
                 const Spacer(),
                 SizedBox(
-                  width: contentWidth,
+                  width: _contentWidth,
                   child: AspectRatio(
                     aspectRatio: CarMakeTile.cardAspectRatio,
                     child: _CarMakeTileContent(
@@ -153,6 +163,11 @@ class CarMakeDetailBottomSheet extends StatelessWidget {
     );
   }
 
+  double get _contentWidth {
+    final maxRadius = minRadius * 1.5;
+    return math.min(contentWidth, maxRadius);
+  }
+
   static final _isTestEnvironment = AppConstants.isTestEnvironment;
 
   static Future<dynamic> show({
@@ -164,7 +179,7 @@ class CarMakeDetailBottomSheet extends StatelessWidget {
     final verticalPadding = MediaQuery.paddingOf(context).top;
     final viewPortHeight = MediaQuery.of(context).size.height;
     final boxConstraints = BoxConstraints.tightFor(
-      height: viewPortHeight - verticalPadding - AppConstants.spacing8,
+      height: viewPortHeight - verticalPadding - AppConstants.spacing16,
     );
     final contentWidth = MediaQuery.of(context).size.width * 0.33;
 
@@ -199,6 +214,11 @@ class _CarMakeTileContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final circleAvatarTextStyle = theme.textTheme.headlineLarge?.copyWith(
+      color: colorScheme.primary,
+      fontSize: minRadius * 0.5,
+    );
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -208,10 +228,7 @@ class _CarMakeTileContent extends StatelessWidget {
             minRadius: minRadius,
             child: Text(
               carMake.name[0].toUpperCase(),
-              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                    color: colorScheme.primary,
-                    fontSize: minRadius * 0.5,
-                  ),
+              style: circleAvatarTextStyle,
               textAlign: TextAlign.center,
             ),
           ),
