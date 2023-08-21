@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:go_router/go_router.dart';
 
 import '../../features.dart';
 
@@ -14,20 +11,15 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text(_title),
-        actions: [
-          IconButton(
-            icon: const Icon(CupertinoIcons.heart_circle),
-            onPressed: () => context.push(LikedCarMakesScreen.routeName),
-          ),
-          const ThemeLinkIcon(),
+    return const Scaffold(
+      drawer: HomeDrawer(),
+      body: CustomScrollView(
+        slivers: [
+          ExtendedHomeSliverAppBar(title: _title),
+          CarManufacturersList(),
         ],
       ),
-      body: const CarManufacturersList(),
-      floatingActionButton: const NetworkConnectivyFab(),
+      floatingActionButton: NetworkConnectivyFab(),
     );
   }
 }

@@ -31,10 +31,13 @@ class ThemeScreen extends ConsumerWidget {
                   color: foregroundColor,
                 ),
                 AppSpacing.horizontalSpacing4,
-                const Expanded(
+                Expanded(
                   child: Text(
                     'Theme',
                     textAlign: TextAlign.center,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      color: foregroundColor,
+                    ),
                   ),
                 ),
               ],

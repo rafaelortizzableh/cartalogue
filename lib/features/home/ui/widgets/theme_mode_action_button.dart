@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../features.dart';
 
-class ThemeLinkIcon extends ConsumerWidget {
-  const ThemeLinkIcon({super.key});
+class ThemeIcon extends ConsumerWidget {
+  const ThemeIcon({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeControllerProvider);
     final icon = _assignIcon(themeMode);
 
-    return IconButton(
-      icon: Icon(icon),
-      onPressed: () => context.push(ThemeScreen.routeName),
-    );
+    return Icon(icon);
   }
 
   IconData _assignIcon(ThemeMode themeMode) {

@@ -60,6 +60,11 @@ class CarManufacturerDetailsScreen extends ConsumerWidget {
       orElse: () => false,
     );
 
+    final theme = Theme.of(context);
+    final preferredColor = ref.watch(preferredColorControllerProvider);
+    final foregroundColor =
+        preferredColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -70,6 +75,9 @@ class CarManufacturerDetailsScreen extends ConsumerWidget {
                 manufacturerName,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  color: foregroundColor,
+                ),
               ),
             ),
             floating: true,

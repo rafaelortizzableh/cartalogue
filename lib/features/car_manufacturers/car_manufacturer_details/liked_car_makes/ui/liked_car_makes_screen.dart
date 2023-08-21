@@ -17,6 +17,7 @@ class LikedCarMakesScreen extends ConsumerWidget {
     final preferredColor = ref.watch(preferredColorControllerProvider);
     final foregroundColor =
         preferredColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+    final theme = Theme.of(context);
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -29,11 +30,14 @@ class LikedCarMakesScreen extends ConsumerWidget {
                   color: foregroundColor,
                 ),
                 AppSpacing.horizontalSpacing4,
-                const Expanded(
+                Expanded(
                   child: Text(
                     'Liked Car Makes',
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      color: foregroundColor,
+                    ),
                   ),
                 ),
               ],

@@ -23,6 +23,7 @@ class CustomTheme {
   ThemeData darkTheme(
     MaterialColor primaryColor,
   ) {
+    final defaultTheme = ThemeData.dark();
     final foregroundColor =
         primaryColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
 
@@ -32,6 +33,9 @@ class CustomTheme {
     return ThemeData(
       appBarTheme: AppBarTheme(
         iconTheme: IconThemeData(
+          color: foregroundColor,
+        ),
+        titleTextStyle: defaultTheme.textTheme.headlineSmall!.copyWith(
           color: foregroundColor,
         ),
         backgroundColor: primaryColor,
@@ -63,9 +67,14 @@ class CustomTheme {
     final overlayStyle = primaryColor.computeLuminance() > 0.5
         ? SystemUiOverlayStyle.dark
         : SystemUiOverlayStyle.light;
+    final defaultTheme = ThemeData.light();
+
     return ThemeData(
       appBarTheme: AppBarTheme(
         iconTheme: IconThemeData(
+          color: foregroundColor,
+        ),
+        titleTextStyle: defaultTheme.textTheme.headlineSmall!.copyWith(
           color: foregroundColor,
         ),
         backgroundColor: primaryColor,

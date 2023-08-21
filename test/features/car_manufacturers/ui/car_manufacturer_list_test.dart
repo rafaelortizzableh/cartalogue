@@ -1,4 +1,5 @@
 import 'package:cartalogue/core/core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:cartalogue/features/features.dart';
@@ -39,7 +40,7 @@ void main() {
       );
 
       await tester.pumpApp(
-        const CarManufacturersList(),
+        const CustomScrollView(slivers: [CarManufacturersList()]),
         overrides: [
           carManufacturersControllerProvider.overrideWith(
             (_) => mockController,
@@ -67,7 +68,11 @@ void main() {
         );
 
         await tester.pumpApp(
-          const CarManufacturersList(),
+          const CustomScrollView(
+            slivers: [
+              CarManufacturersList(),
+            ],
+          ),
           overrides: [
             carManufacturersControllerProvider.overrideWith(
               (_) => mockController,
@@ -110,7 +115,11 @@ void main() {
       );
 
       return tester.pumpApp(
-        const CarManufacturersList(),
+        const CustomScrollView(
+          slivers: [
+            CarManufacturersList(),
+          ],
+        ),
         overrides: [
           carManufacturersControllerProvider.overrideWith(
             (_) => mockController,
@@ -153,7 +162,11 @@ void main() {
       );
 
       await tester.pumpApp(
-        const CarManufacturersList(),
+        const CustomScrollView(
+          slivers: [
+            CarManufacturersList(),
+          ],
+        ),
         overrides: [
           carManufacturersControllerProvider.overrideWith(
             (_) => mockController,
@@ -198,7 +211,11 @@ void main() {
       );
 
       await tester.pumpApp(
-        const CarManufacturersList(),
+        const CustomScrollView(
+          slivers: [
+            CarManufacturersList(),
+          ],
+        ),
         overrides: [
           carManufacturersControllerProvider.overrideWith(
             (_) => mockController,
@@ -243,7 +260,7 @@ void main() {
       );
 
       await tester.pumpApp(
-        const CarManufacturersList(),
+        const CustomScrollView(slivers: [CarManufacturersList()]),
         overrides: [
           carManufacturersControllerProvider.overrideWith(
             (_) => mockController,
@@ -272,7 +289,7 @@ void main() {
       );
 
       await tester.pumpApp(
-        const CarManufacturersList(),
+        const CustomScrollView(slivers: [CarManufacturersList()]),
         overrides: [
           carManufacturersControllerProvider.overrideWith(
             (_) => mockController,

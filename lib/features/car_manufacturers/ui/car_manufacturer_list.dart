@@ -39,53 +39,60 @@ class CarManufacturersList extends ConsumerWidget {
     final isNetworkConnected = ref.watch(isNetworkConnectedProvider);
 
     if (error != null) {
-      return ErrorLoadingManufacturers(
-        onRefresh: () => _onRefresh(ref),
-        error: error,
+      return SliverFillRemaining(
+        child: ErrorLoadingManufacturers(
+          onRefresh: () => _onRefresh(ref),
+          error: error,
+        ),
       );
     }
 
     if (isLoading) {
-      return const Center(child: GenericLoader());
+      return const SliverFillRemaining(child: Center(child: GenericLoader()));
     }
 
     if (manufacturers != null && manufacturers.isEmpty) {
-      return OnRefreshManufacturersList(
-        onRefresh: () => _onRefresh(ref),
+      return SliverFillRemaining(
+        child: OnRefreshManufacturersList(
+          onRefresh: () => _onRefresh(ref),
+        ),
       );
     }
 
     if (manufacturers == null) {
-      return AppSpacing.emptySpace;
+      return const SliverFillRemaining(child: AppSpacing.emptySpace);
     }
 
     final preferredColor = ref.watch(preferredColorControllerProvider);
 
-    return ListView.separated(
+    return SliverPadding(
       padding: AppConstants.padding12,
-      itemCount: manufacturers.length + 1, // One extra item for load more card.
-      separatorBuilder: (context, index) => AppSpacing.verticalSpacing8,
-      itemBuilder: (context, index) {
-        final isLoadMoreCard = index == manufacturers.length;
-        if (isLoadMoreCard) {
-          return LoadMoreManufacturers(
-            isNetworkConnected: isNetworkConnected,
-            onLoadMore: () => _onRefresh(ref),
-            isLoadingMore: isLoadingMore,
-            hasReachedMax: hasReachedMax,
-            preferredColor: preferredColor,
+      sliver: SliverList.separated(
+        itemCount:
+            manufacturers.length + 1, // One extra item for load more card.
+        separatorBuilder: (context, index) => AppSpacing.verticalSpacing8,
+        itemBuilder: (context, index) {
+          final isLoadMoreCard = index == manufacturers.length;
+          if (isLoadMoreCard) {
+            return LoadMoreManufacturers(
+              isNetworkConnected: isNetworkConnected,
+              onLoadMore: () => _onRefresh(ref),
+              isLoadingMore: isLoadingMore,
+              hasReachedMax: hasReachedMax,
+              preferredColor: preferredColor,
+            );
+          }
+          final manufacturer = manufacturers[index];
+          return CarManufacturerCard(
+            manufacturer: manufacturer,
+            onTap: (manufacturer) => _onCarManufacturerTap(
+              context,
+              ref,
+              manufacturer.id,
+            ),
           );
-        }
-        final manufacturer = manufacturers[index];
-        return CarManufacturerCard(
-          manufacturer: manufacturer,
-          onTap: (manufacturer) => _onCarManufacturerTap(
-            context,
-            ref,
-            manufacturer.id,
-          ),
-        );
-      },
+        },
+      ),
     );
   }
 
@@ -96,7 +103,7 @@ class CarManufacturersList extends ConsumerWidget {
   ) {
     final controller = ref.read(carManufacturersControllerProvider.notifier);
     controller.selectManufacturer(carManufacturerId);
-    context.push(CarManufacturerDetailsScreen.routeName);
+    context.pushNamed(CarManufacturerDetailsScreen.routeName);
   }
 
   Future<void> _onRefresh(WidgetRef ref) async {
