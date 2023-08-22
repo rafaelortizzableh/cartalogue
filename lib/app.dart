@@ -21,6 +21,7 @@ class CartalogueApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: customTheme.lightTheme(preferredColor),
       darkTheme: customTheme.darkTheme(preferredColor),
+      color: preferredColor,
       themeMode: themeMode,
       routeInformationProvider: router.routeInformationProvider,
       routeInformationParser: router.routeInformationParser,

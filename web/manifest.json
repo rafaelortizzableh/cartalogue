@@ -3,9 +3,9 @@
     "short_name": "cartalogue",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FFF",
+    "theme_color": "#000",
+    "description": "Catalogue of car manufacturers",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
