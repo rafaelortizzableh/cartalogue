@@ -1,0 +1,33 @@
+name: Deploy to Firebase Hosting on PR
+'on': pull_request
+branches:
+  - main
+jobs:
+  build_and_preview:
+    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install Dependencies
+        run: |
+          flutter pub global activate very_good_cli
+          very_good --analytics false
+          very_good packages get --recursive
+
+      - name: Run tests
+        run: very_good test -j 4 --optimization --test-randomize-ordering-seed random
+
+      - name: Build Web App
+        run: flutter build web
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARTALOGUE_APP }}'
+          projectId: cartalogue-app
