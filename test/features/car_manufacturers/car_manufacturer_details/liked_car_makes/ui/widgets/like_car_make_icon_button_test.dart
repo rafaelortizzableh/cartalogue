@@ -110,6 +110,12 @@ void main() {
           )).thenAnswer(
         (_) => [carMake.toJson()],
       );
+      when(() => sharedPreferencesService.saveListOfStringsToSharedPreferences(
+            any(),
+            any(),
+          )).thenAnswer(
+        (_) async => true,
+      );
 
       await tester.pumpApp(
         LikeCarMakeIconButton(

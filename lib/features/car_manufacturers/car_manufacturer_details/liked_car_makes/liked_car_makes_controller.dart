@@ -44,15 +44,6 @@ class LikedCarMakesController extends StateNotifier<Set<CarMakeModel>> {
   Future<void> _saveLikedCarMakeIdsToSharedPreferences(
     Set<CarMakeModel> state,
   ) async {
-    final savedCarMakes = _ref
-        .read(sharedPreferencesServiceProvider)
-        .getListOfStringsFromSharedPreferences(
-          _likedCarMakesKey,
-        );
-    final shouldSaveState = _isNewState(savedCarMakes, state);
-
-    if (!shouldSaveState) return;
-
     final sharedPreferencesService = _ref.read(
       sharedPreferencesServiceProvider,
     );
@@ -65,22 +56,5 @@ class LikedCarMakesController extends StateNotifier<Set<CarMakeModel>> {
       _likedCarMakesKey,
       newValues,
     );
-  }
-
-  static bool _isNewState(
-    List<String>? savedCarMakes,
-    Set<CarMakeModel> state,
-  ) {
-    if (savedCarMakes == null) {
-      return true;
-    }
-
-    final savedCarMakesSet = {
-      ...savedCarMakes.map((json) => CarMakeModel.fromJson(json)),
-    };
-
-    final areSetsEqual = savedCarMakesSet.difference(state).isEmpty;
-
-    return !areSetsEqual;
   }
 }
