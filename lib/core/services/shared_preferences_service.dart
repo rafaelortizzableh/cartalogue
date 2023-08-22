@@ -42,7 +42,7 @@ class SharedPreferencesService {
     return _sharedPreferences.getDouble(key);
   }
 
-  /// Fetch a double from Local Storage ([SharedPreferences]).
+  /// Saves a list of strings to Local Storage ([SharedPreferences]).
   Future<bool> saveListOfStringsToSharedPreferences(
     String key,
     List<String> values,
@@ -79,7 +79,8 @@ class SharedPreferencesService {
     );
   }
 
-  /// Removes a key from Local Storage ([SharedPreferences]).
+  /// Removes the values of a given key
+  /// from Local Storage ([SharedPreferences]).
   Future<bool> removeFromSharedPreferences(String key) {
     return _sharedPreferences.remove(key);
   }
