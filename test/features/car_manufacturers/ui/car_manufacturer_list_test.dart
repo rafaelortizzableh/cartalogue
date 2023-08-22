@@ -167,12 +167,13 @@ void main() {
             CarManufacturersList(),
           ],
         ),
+        networkConnectivityController: MockNetworkConnectivityController(
+          NetworkConnectivityStatus.connected,
+        ),
         overrides: [
           carManufacturersControllerProvider.overrideWith(
             (_) => mockController,
           ),
-          networkConnectivityStatusProvider
-              .overrideWithValue(NetworkConnectivityStatus.connected),
         ],
       );
 
@@ -217,12 +218,13 @@ void main() {
             CarManufacturersList(),
           ],
         ),
+        networkConnectivityController: MockNetworkConnectivityController(
+          NetworkConnectivityStatus.connected,
+        ),
         overrides: [
           carManufacturersControllerProvider.overrideWith(
             (_) => mockController,
           ),
-          networkConnectivityStatusProvider
-              .overrideWithValue(NetworkConnectivityStatus.connected),
         ],
       );
 
@@ -263,12 +265,13 @@ void main() {
 
       await tester.pumpApp(
         const CustomScrollView(slivers: [CarManufacturersList()]),
+        networkConnectivityController: MockNetworkConnectivityController(
+          NetworkConnectivityStatus.disconnected,
+        ),
         overrides: [
           carManufacturersControllerProvider.overrideWith(
             (_) => mockController,
           ),
-          networkConnectivityStatusProvider
-              .overrideWithValue(NetworkConnectivityStatus.disconnected),
         ],
       );
 

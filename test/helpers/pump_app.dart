@@ -16,6 +16,7 @@ extension PumpApp on WidgetTester {
     Widget widget, {
     SharedPreferencesService? sharedPreferencesService,
     LoggerService? loggerService,
+    NetworkConnectivityController? networkConnectivityController,
     List<Override> overrides = const [],
   }) async {
     // Set up mocked [SharedPreferencesService].
@@ -23,6 +24,12 @@ extension PumpApp on WidgetTester {
     SharedPreferences mockPreferences = await SharedPreferences.getInstance();
     final mockSharedPreferencesService =
         sharedPreferencesService ?? SharedPreferencesService(mockPreferences);
+
+    // Set up mocked [NetworkConnectivityController].
+    final mockNetworkConnectivityController = networkConnectivityController ??
+        MockNetworkConnectivityController(
+          NetworkConnectivityStatus.connected,
+        );
 
     // Set up mocked [LoggerService].
     final mockLoggerService = MockLoggerService();
@@ -49,6 +56,9 @@ extension PumpApp on WidgetTester {
                 ),
                 loggerServiceProvider.overrideWithValue(
                   mockLogger,
+                ),
+                networkConnectivityStatusProvider.overrideWith(
+                  (_) => mockNetworkConnectivityController,
                 ),
                 ...overrides,
               ],

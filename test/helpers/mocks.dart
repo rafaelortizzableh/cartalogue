@@ -60,3 +60,12 @@ class MockLikedCarMakesController extends StateNotifier<Set<CarMakeModel>>
 
   void setState(Set<CarMakeModel> state) => this.state = state;
 }
+
+class MockNetworkConnectivityController
+    extends StateNotifier<NetworkConnectivityStatus>
+    with Mock
+    implements NetworkConnectivityController {
+  MockNetworkConnectivityController(super.state);
+
+  void setState(NetworkConnectivityStatus state) => this.state = state;
+}
