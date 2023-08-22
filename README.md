@@ -67,8 +67,8 @@ alt="Favorites Screen - Screenshot 2" width="300"/>
 
 # Theme Settings Screen
 
-<img src="https://github.com/rafaelortizzableh/cartalogue/assets/57945332/82f2fec2-456c-4f87-84b6-0cc4b55fb7cd" alt="Theme Settings Screen - Screenshot 1" width="300>
+<img src="https://github.com/rafaelortizzableh/cartalogue/assets/57945332/82f2fec2-456c-4f87-84b6-0cc4b55fb7cd" alt="Theme Settings Screen - Screenshot 1" width="300">
 
-<img src="https://github.com/rafaelortizzableh/cartalogue/assets/57945332/bb9ce219-11b8-4490-a19a-2640216a74f6" alt="Theme Settings Screen - Screenshot 2" width="300>
+<img src="https://github.com/rafaelortizzableh/cartalogue/assets/57945332/bb9ce219-11b8-4490-a19a-2640216a74f6" alt="Theme Settings Screen - Screenshot 2" width="300">
 
-<img src="https://github.com/rafaelortizzableh/cartalogue/assets/57945332/6ec8d5aa-2c5d-4625-acd2-94007a1b537c" alt="Theme Settings Screen - Screenshot 3" width="300>
+<img src="https://github.com/rafaelortizzableh/cartalogue/assets/57945332/6ec8d5aa-2c5d-4625-acd2-94007a1b537c" alt="Theme Settings Screen - Screenshot 3" width="300">
