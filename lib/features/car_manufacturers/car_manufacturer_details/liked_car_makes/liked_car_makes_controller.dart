@@ -72,7 +72,7 @@ class LikedCarMakesController extends StateNotifier<Set<CarMakeModel>> {
     Set<CarMakeModel> state,
   ) {
     if (savedCarMakes == null) {
-      return false;
+      return true;
     }
 
     final savedCarMakesSet = {

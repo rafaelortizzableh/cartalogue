@@ -118,5 +118,55 @@ void main() {
 
       expect(state, contains(carMake));
     });
+
+    test(
+      'Given a CarMakeModel, '
+      'when onCarMakeLiked is called, '
+      'then the value should be saved to shared preferences.',
+      () async {
+        final sharedPreferencesService = MockSharedPreferencesService();
+
+        when(
+          () => sharedPreferencesService.getListOfStringsFromSharedPreferences(
+            any(),
+          ),
+        ).thenAnswer(
+          (_) => null,
+        );
+
+        when(
+            () => sharedPreferencesService.saveListOfStringsToSharedPreferences(
+                  any(),
+                  any(),
+                )).thenAnswer(
+          (_) async => true,
+        );
+
+        final container = ProviderContainer(
+          overrides: [
+            sharedPreferencesServiceProvider.overrideWithValue(
+              sharedPreferencesService,
+            ),
+          ],
+        );
+
+        final controller =
+            container.read(likedCarMakesControllerProvider.notifier);
+
+        const carMake = CarMakeModel(id: 1, name: 'Mini');
+
+        controller.onCarMakeLiked(carMake);
+
+        // Expect `saveListOfStringsToSharedPreferences` to be called twice:
+        //  1. When the controller is initialized and the state is an empty set.
+        //  2. When onCarMakeLiked is called and the state is updated.
+        verify(
+          () => sharedPreferencesService.saveListOfStringsToSharedPreferences(
+            any(),
+            any(),
+          ),
+        ).called(2);
+      },
+    );
   });
 }
