@@ -11,8 +11,6 @@ void main() {
     late Dio dio;
     late DioAdapter dioAdapter;
 
-    TestWidgetsFlutterBinding.ensureInitialized();
-
     setUpAll(() {
       registerFallbackValue(Uri());
     });
@@ -120,6 +118,8 @@ void main() {
         'when fetchCarManufacturersRemotely is called, '
         'then it should return a list of car manufacturers.', () async {
       // Given
+      TestWidgetsFlutterBinding.ensureInitialized();
+
       final fakeManifacturerRemoteEntities = [
         const CarManufacturerRemoteEntity(
           name: 'Chevrolet',
@@ -174,6 +174,8 @@ void main() {
         'when getCarMakes is called, '
         'then a list of car makes is returned', () async {
       // Given
+      TestWidgetsFlutterBinding.ensureInitialized();
+
       final fakeCarMakesRemoteEntities = [
         const CarMakeRemoteEntity(
           makeId: 474,
