@@ -63,6 +63,14 @@ class CarManufacturersController extends StateNotifier<CarManufacturersState> {
         page: pageToFetch,
       );
 
+      if (fetchedCarManufacturers.isEmpty) {
+        state = state.copyWith(
+          isLoadingMore: false,
+          hasReachedMax: true,
+        );
+        return;
+      }
+
       final carManufacturers = {
         ...state.carManufacturers.asData?.value ?? {},
         for (final manufacturer in fetchedCarManufacturers) ...{
