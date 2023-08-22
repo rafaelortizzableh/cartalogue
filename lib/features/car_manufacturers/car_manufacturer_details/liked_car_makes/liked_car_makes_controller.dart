@@ -15,12 +15,12 @@ class LikedCarMakesController extends StateNotifier<Set<CarMakeModel>> {
 
   final Ref _ref;
 
-  static const _likedCarMakeIdsKey = 'liked_car_make_ids';
+  static const _likedCarMakesKey = 'liked_car_makes';
 
   static Set<CarMakeModel> _loadInitialState(Ref ref) {
     final savedCarMakes = ref
         .read(sharedPreferencesServiceProvider)
-        .getListOfStringsFromSharedPreferences(_likedCarMakeIdsKey);
+        .getListOfStringsFromSharedPreferences(_likedCarMakesKey);
     if (savedCarMakes == null) {
       return {};
     }
@@ -42,7 +42,17 @@ class LikedCarMakesController extends StateNotifier<Set<CarMakeModel>> {
   }
 
   Future<void> _saveLikedCarMakeIdsToSharedPreferences(
-      Set<CarMakeModel> state) async {
+    Set<CarMakeModel> state,
+  ) async {
+    final savedCarMakes = _ref
+        .read(sharedPreferencesServiceProvider)
+        .getListOfStringsFromSharedPreferences(
+          _likedCarMakesKey,
+        );
+    final shouldSaveState = _isNewState(savedCarMakes, state);
+
+    if (!shouldSaveState) return;
+
     final sharedPreferencesService = _ref.read(
       sharedPreferencesServiceProvider,
     );
@@ -52,8 +62,25 @@ class LikedCarMakesController extends StateNotifier<Set<CarMakeModel>> {
 
     if (!mounted) return;
     await sharedPreferencesService.saveListOfStringsToSharedPreferences(
-      _likedCarMakeIdsKey,
+      _likedCarMakesKey,
       newValues,
     );
+  }
+
+  static bool _isNewState(
+    List<String>? savedCarMakes,
+    Set<CarMakeModel> state,
+  ) {
+    if (savedCarMakes == null) {
+      return false;
+    }
+
+    final savedCarMakesSet = {
+      ...savedCarMakes.map((json) => CarMakeModel.fromJson(json)),
+    };
+
+    final areSetsEqual = savedCarMakesSet.difference(state).isEmpty;
+
+    return !areSetsEqual;
   }
 }

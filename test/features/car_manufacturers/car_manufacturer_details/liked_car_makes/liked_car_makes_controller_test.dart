@@ -49,7 +49,7 @@ void main() {
       'then the state should be a set of car makes',
       () async {
         SharedPreferences.setMockInitialValues({
-          'liked_car_make_ids': [
+          'liked_car_makes': [
             '{"id":1,"name":"Mini"}',
             '{"id":2,"name":"BMW"}',
           ],
