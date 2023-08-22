@@ -112,7 +112,7 @@ class SharedPreferencesAndNHTSACarManufacturersService
         carManufacturers.map((manufacturer) => manufacturer.toJson()).toList();
 
     await Future.wait([
-      _sharedPreferencesService.saveListOfStringsToSharedPreferences(
+      _sharedPreferencesService.save(
         savedCarManufacturersKey,
         carManufacturersJson,
       ),
