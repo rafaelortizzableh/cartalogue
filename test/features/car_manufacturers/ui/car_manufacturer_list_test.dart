@@ -171,7 +171,8 @@ void main() {
           carManufacturersControllerProvider.overrideWith(
             (_) => mockController,
           ),
-          isNetworkConnectedProvider.overrideWithValue(true),
+          networkConnectivityStatusProvider
+              .overrideWithValue(NetworkConnectivityStatus.connected),
         ],
       );
 
@@ -220,7 +221,8 @@ void main() {
           carManufacturersControllerProvider.overrideWith(
             (_) => mockController,
           ),
-          isNetworkConnectedProvider.overrideWithValue(true),
+          networkConnectivityStatusProvider
+              .overrideWithValue(NetworkConnectivityStatus.connected),
         ],
       );
 
@@ -265,7 +267,8 @@ void main() {
           carManufacturersControllerProvider.overrideWith(
             (_) => mockController,
           ),
-          isNetworkConnectedProvider.overrideWithValue(false),
+          networkConnectivityStatusProvider
+              .overrideWithValue(NetworkConnectivityStatus.disconnected),
         ],
       );
 

@@ -14,12 +14,24 @@ final _onConnectivityChangedProvider =
   return connectivity.onConnectivityChanged;
 });
 
-final isNetworkConnectedProvider = Provider.autoDispose<bool>((ref) {
+enum NetworkConnectivityStatus {
+  connected,
+  loading,
+  disconnected,
+}
+
+final networkConnectivityStatusProvider =
+    Provider.autoDispose<NetworkConnectivityStatus>((ref) {
   final connectivityResult = ref.watch(_onConnectivityChangedProvider);
   return connectivityResult.when(
-    data: (result) => result != ConnectivityResult.none,
-    loading: () => true,
-    error: (error, _) => false,
+    data: (result) {
+      if (result == ConnectivityResult.none) {
+        return NetworkConnectivityStatus.disconnected;
+      }
+      return NetworkConnectivityStatus.connected;
+    },
+    loading: () => NetworkConnectivityStatus.loading,
+    error: (error, _) => NetworkConnectivityStatus.disconnected,
   );
 });
 

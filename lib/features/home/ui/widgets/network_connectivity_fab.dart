@@ -12,10 +12,12 @@ class NetworkConnectivyFab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isNetworkConnected = ref.watch(isNetworkConnectedProvider);
+    final isNetworkDisconnected =
+        ref.watch(networkConnectivityStatusProvider) ==
+            NetworkConnectivityStatus.disconnected;
 
     return _NoConnectionIcon(
-      isNetworkConnected: isNetworkConnected,
+      isNetworkDisconnected: isNetworkDisconnected,
     );
   }
 }
@@ -24,10 +26,10 @@ class _NoConnectionIcon extends StatefulWidget {
   const _NoConnectionIcon({
     // ignore: unused_element
     super.key,
-    required this.isNetworkConnected,
+    required this.isNetworkDisconnected,
   });
 
-  final bool isNetworkConnected;
+  final bool isNetworkDisconnected;
 
   @override
   State<_NoConnectionIcon> createState() => _NoConnectionIconState();
@@ -35,7 +37,7 @@ class _NoConnectionIcon extends StatefulWidget {
 
 class _NoConnectionIconState extends State<_NoConnectionIcon>
     with TickerProviderStateMixin {
-  late bool _shouldRender = !widget.isNetworkConnected;
+  late bool _shouldRender = widget.isNetworkDisconnected;
 
   late final _transformationAnimationController = AnimationController(
     vsync: this,
@@ -58,7 +60,7 @@ class _NoConnectionIconState extends State<_NoConnectionIcon>
   }
 
   void _hideIconAfterSlideAnimationCompletes() {
-    if (widget.isNetworkConnected) {
+    if (!widget.isNetworkDisconnected) {
       _slideAnimationController.reverse().then((value) {
         setState(() => _shouldRender = false);
       });

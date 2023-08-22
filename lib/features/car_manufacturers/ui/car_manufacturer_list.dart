@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -36,7 +37,9 @@ class CarManufacturersList extends ConsumerWidget {
         .carManufacturers
         .whenOrNull(error: (error, _) => error);
 
-    final isNetworkConnected = ref.watch(isNetworkConnectedProvider);
+    final isNetworkDisconnected =
+        ref.watch(networkConnectivityStatusProvider) ==
+            NetworkConnectivityStatus.disconnected;
 
     if (error != null) {
       return SliverFillRemaining(
@@ -53,7 +56,8 @@ class CarManufacturersList extends ConsumerWidget {
 
     if (manufacturers != null && manufacturers.isEmpty) {
       return SliverFillRemaining(
-        child: OnRefreshManufacturersList(
+        child: ErrorLoadingManufacturers(
+          error: 'No manufacturers found',
           onRefresh: () => _onRefresh(ref),
         ),
       );
@@ -75,7 +79,7 @@ class CarManufacturersList extends ConsumerWidget {
           final isLoadMoreCard = index == manufacturers.length;
           if (isLoadMoreCard) {
             return LoadMoreManufacturers(
-              isNetworkConnected: isNetworkConnected,
+              isNetworkDisconnected: isNetworkDisconnected,
               onLoadMore: () => _onRefresh(ref),
               isLoadingMore: isLoadingMore,
               hasReachedMax: hasReachedMax,
@@ -130,12 +134,16 @@ class ErrorLoadingManufacturers extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          const Icon(
+            CupertinoIcons.wifi_slash,
+          ),
+          AppSpacing.verticalSpacing8,
           Text(
             errorMessage,
             textAlign: TextAlign.center,
           ),
           AppSpacing.verticalSpacing8,
-          TextButton.icon(
+          ElevatedButton.icon(
             icon: const Icon(Icons.refresh),
             label: const Text(
               'Refresh',
@@ -157,59 +165,26 @@ class ErrorLoadingManufacturers extends StatelessWidget {
   }
 }
 
-class OnRefreshManufacturersList extends StatelessWidget {
-  const OnRefreshManufacturersList({
-    super.key,
-    required this.onRefresh,
-  });
-
-  final Future<void> Function() onRefresh;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            'No manufacturers found\n Pull to refresh',
-            textAlign: TextAlign.center,
-          ),
-          AppSpacing.verticalSpacing8,
-          TextButton.icon(
-            icon: const Icon(Icons.refresh),
-            label: const Text(
-              'Refresh',
-              textAlign: TextAlign.center,
-            ),
-            onPressed: () => unawaited(onRefresh()),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class LoadMoreManufacturers extends StatelessWidget {
   const LoadMoreManufacturers({
     super.key,
     required this.onLoadMore,
     required this.isLoadingMore,
     required this.hasReachedMax,
-    required this.isNetworkConnected,
+    required this.isNetworkDisconnected,
     required this.preferredColor,
   });
 
   final Future<void> Function() onLoadMore;
   final bool isLoadingMore;
   final bool hasReachedMax;
-  final bool isNetworkConnected;
+  final bool isNetworkDisconnected;
   final Color preferredColor;
 
   @override
   Widget build(BuildContext context) {
     final isButtonEnabled =
-        !hasReachedMax && !isLoadingMore && isNetworkConnected;
+        !hasReachedMax && !isLoadingMore && !isNetworkDisconnected;
 
     return AnimatedSize(
       duration: kThemeAnimationDuration,
@@ -220,7 +195,7 @@ class LoadMoreManufacturers extends StatelessWidget {
           child: _LoadMoreButtonContent(
             hasReachedMax: hasReachedMax,
             isLoadingMore: isLoadingMore,
-            isNetworkConnected: isNetworkConnected,
+            isNetworkDisconnected: isNetworkDisconnected,
           ),
         ),
       ),
@@ -234,15 +209,15 @@ class _LoadMoreButtonContent extends StatelessWidget {
     super.key,
     required this.isLoadingMore,
     required this.hasReachedMax,
-    required this.isNetworkConnected,
+    required this.isNetworkDisconnected,
   });
   final bool isLoadingMore;
   final bool hasReachedMax;
-  final bool isNetworkConnected;
+  final bool isNetworkDisconnected;
 
   @override
   Widget build(BuildContext context) {
-    if (!isNetworkConnected) {
+    if (isNetworkDisconnected) {
       return const Text(
         'No internet connection',
         textAlign: TextAlign.center,
