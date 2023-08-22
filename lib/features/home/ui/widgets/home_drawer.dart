@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/core.dart';
@@ -10,20 +11,26 @@ class HomeDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Drawer(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.topRight,
-              child: _CloseDrawerButton(),
-            ),
-            DrawerHeader(
-              child: Text('Options'),
-            ),
-            _LikedCarsListTile(),
-            _ThemeListTile(),
-          ],
+    final systemUiOverlayStyle = Theme.of(context).brightness == Brightness.dark
+        ? SystemUiOverlayStyle.light
+        : SystemUiOverlayStyle.dark;
+    final width = MediaQuery.sizeOf(context).width * 0.85;
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: systemUiOverlayStyle,
+      child: Drawer(
+        width: width,
+        child: const SingleChildScrollView(
+          child: Column(
+            children: [
+              DrawerHeader(
+                child: Row(
+                  children: [Text('Options'), Spacer(), _CloseDrawerButton()],
+                ),
+              ),
+              _LikedCarsListTile(),
+              _ThemeListTile(),
+            ],
+          ),
         ),
       ),
     );
