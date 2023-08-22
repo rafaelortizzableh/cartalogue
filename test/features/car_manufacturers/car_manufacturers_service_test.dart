@@ -11,6 +11,8 @@ void main() {
     late Dio dio;
     late DioAdapter dioAdapter;
 
+    TestWidgetsFlutterBinding.ensureInitialized();
+
     setUpAll(() {
       registerFallbackValue(Uri());
     });
