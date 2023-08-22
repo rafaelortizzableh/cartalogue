@@ -5,7 +5,16 @@ The app can be built for all platforms (Android, iOS, Web, Desktop) using the sa
 
 You can test the app on your browser by visiting [https://cartalogue-app.web.app](https://cartalogue-app.web.app).
 
-Take into account that the app's layout is not optimized for large (desktop) sizes.
+Take into account that the app's layout is not optimized for large (desktop) sizes and runs best on mobile devices.
+
+## Getting Started
+To run the app, you need to have Flutter installed on your machine. You can find instructions on how to install Flutter [here](https://flutter.dev/docs/get-started/install).
+
+Once you have Flutter installed, you can run the app on your device or emulator by running the following command:
+
+```bash
+flutter run
+```
 
 ## Features
 
